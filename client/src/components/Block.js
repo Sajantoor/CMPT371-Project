@@ -5,7 +5,6 @@ export default function Block(props) {
     const [color, setColor] = useState("gray");
 
     useEffect(() => {
-        console.log("Block rendered");
     }, []);
 
     function handleClick() {
