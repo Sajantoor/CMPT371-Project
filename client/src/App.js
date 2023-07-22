@@ -1,9 +1,14 @@
 import './App.css';
+import Board from './components/Board';
+
 
 function App() {
   return (
     <div className="App">
-      <h1> Hello World! </h1>
+      <div className="container">
+        <h1> Deny and Conquer </h1>
+        <Board />
+      </div>
     </div>
   );
 }
