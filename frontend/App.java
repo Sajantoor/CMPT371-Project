@@ -1,8 +1,17 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
 
 public class App {
+    static ClientSocket clientSocket;
+
     public static void main(String[] args) {
+        clientSocket = new ClientSocket();
+        try {
+            clientSocket.connect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         SwingUtilities.invokeLater(() -> createAndShowGUI());
     }
 
@@ -24,6 +33,17 @@ public class App {
                 return new Insets(0, 0, 0, 0);
             }
         };
+
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                try {
+                    clientSocket.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
         for (int i = 0; i < 16; i++) {
             Block block = new Block();
