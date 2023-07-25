@@ -25,7 +25,36 @@ public class ClientSocket {
     }
 
     private void handleMessage(String message) {
-        System.out.println("Message recieved");
+        String[] tokens = message.split(" ");
+        String comamndToken = tokens[0];
+
+        switch (comamndToken) {
+            case ("cursor"):
+                // TODO: Call the appropriate cursor's move method here
+                // Tokens are <x position> <y position> <player id>
+                break;
+            case ("draw"):
+                // TODO: Call the appropriate draw method here for this user
+                // Not sure if this is the best way to do this since we already get cursor
+                // updates from the server for all users. Maybe we can have a startDraw and
+                // endDraw command instead and track if the user is drawing or not
+                // Not sure what's the best way, please explore this...
+
+                // Tokens are <tile x> <tile y> <x position> <y position> <player id>
+                break;
+            case ("end"):
+                // TOOD: Call the appropriate game over method here
+                // Game over
+                break;
+            case ("capture"):
+                // TODO: Change the tile's color to a player's color
+                // A player captures a tile
+                // Tokens are <tile x> <tile y> <player id>
+            default:
+                System.out.println("Unrecognized command: " + comamndToken);
+                break;
+        }
+
     }
 
     private void recieveMessages() {
