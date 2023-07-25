@@ -18,6 +18,10 @@ class Block extends JPanel {
 
                 colored = !colored;
                 setBackground(colored ? Color.BLUE : Color.GRAY);
+
+                // Send the draw command to the server
+                String message = String.format("%s %d %d", Constants.drawCommand, e.getX(), e.getY());
+                ClientSocket.getInstance().send(message);
             }
         });
     }

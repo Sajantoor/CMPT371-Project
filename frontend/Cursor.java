@@ -17,6 +17,10 @@ class Cursor extends JPanel {
                 y = e.getY();
                 setLocation(x - 15, y - 15);
                 repaint();
+
+                // Send the cursor's position to the server
+                String message = String.format("%s %d %d", Constants.cursorCommand, x, y);
+                ClientSocket.getInstance().send(message);
             }
         });
     }

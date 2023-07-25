@@ -3,12 +3,10 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 
 public class App {
-    static ClientSocket clientSocket;
 
     public static void main(String[] args) {
-        clientSocket = new ClientSocket();
         try {
-            clientSocket.connect();
+            ClientSocket.getInstance().connect();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -38,7 +36,7 @@ public class App {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
                 try {
-                    clientSocket.close();
+                    ClientSocket.getInstance().close();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
