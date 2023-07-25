@@ -10,7 +10,7 @@ public class App {
         try {
             clientSocket.connect();
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         SwingUtilities.invokeLater(() -> createAndShowGUI());
     }

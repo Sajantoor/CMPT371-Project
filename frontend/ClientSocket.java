@@ -29,7 +29,6 @@ public class ClientSocket {
     }
 
     private void recieveMessages() {
-
         new Thread(() -> {
             while (!isClosed) {
                 try {
@@ -43,7 +42,7 @@ public class ClientSocket {
     }
 
     public void close() throws IOException {
-        isClosed = false; // This is to prevent the infinite loop in the thread from running
+        isClosed = true; // This is to prevent the infinite loop in the thread from running
         in.close();
         out.close();
         socket.close();
