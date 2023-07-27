@@ -1,3 +1,4 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -44,13 +45,10 @@ public class App {
         });
 
         for (int i = 0; i < 16; i++) {
-            Block block = new Block();
+            Block block = new Block(frame);
             boardPanel.add(block);
         }
         containerPanel.add(boardPanel);
-
-        Cursor cursor = new Cursor();
-        containerPanel.add(cursor);
 
         frame.add(containerPanel);
         frame.pack();
