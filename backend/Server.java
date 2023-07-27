@@ -6,11 +6,12 @@ import java.net.*;
  */
 
 public class Server {
-    private static final int PORT = 8080;
+    private static final int PORT = 3000;
     private static final int MAX_PLAYERS = 4;
     private static final int BUFFER_SIZE = 1024;
     private static ServerSocket serverSocket = null;
     private static int playerCount = 0;
+
     public static void main(String[] args) {
         serverSocket = null;
         try {
@@ -30,9 +31,11 @@ public class Server {
 
                 playerCount++;
             }
+
         } catch (IOException e) {
             if (playerCount > MAX_PLAYERS) {
-                throw new Exception("The number of target connections cannot exceed  " + MAX_PLAYERS);
+                throw new RuntimeException("The number of target connections cannot exceed  " + MAX_PLAYERS);
+            }
         } finally {
             // Close the server socket
             if (serverSocket != null) {
@@ -44,11 +47,11 @@ public class Server {
             }
         }
     }
-    
+
     public void clear() throws IOException {
         if (!serverSocket.isClosed()) {
             serverSocket.close();
         }
-        //terminate connections
+        // terminate connections
     }
 }

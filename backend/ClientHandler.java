@@ -19,7 +19,8 @@ class ClientHandler implements Runnable {
             InputStream in = clientSocket.getInputStream();
             OutputStream out = clientSocket.getOutputStream();
 
-            // Send initial game information to the new player (game board, their player info, etc.)
+            // Send initial game information to the new player (game board, their player
+            // info, etc.)
             String initialGameData = "Welcome to the game!";
             out.write(initialGameData.getBytes());
 
