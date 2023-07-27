@@ -35,6 +35,10 @@ public class ClientSocket {
     }
 
     private void handleMessage(String message) {
+        if (message == null) {
+            return;
+        }
+
         String[] tokens = message.split(" ");
         String comamndToken = tokens[0];
 
