@@ -39,10 +39,12 @@ public class ClientSocket {
             return;
         }
 
-        String[] tokens = message.split(" ");
-        String comamndToken = tokens[0];
+        System.out.println("Message from server: " + message);
 
-        switch (comamndToken) {
+        String[] tokens = message.split(" ");
+        String commandToken = tokens[0];
+
+        switch (commandToken) {
             case (Constants.cursorCommand):
                 // TODO: Call the appropriate cursor's move method here
                 // Tokens are <x position> <y position> <player id>
@@ -64,10 +66,12 @@ public class ClientSocket {
                 // TODO: Change the tile's color to a player's color
                 // A player captures a tile
                 // Tokens are <tile x> <tile y> <player id>
+                break;
             case (Constants.playerIDCommand):
                 setPlayerID(tokens[1]);
+                break;
             default:
-                System.out.println("Unrecognized command: " + comamndToken);
+                System.out.println("Unrecognized command from frontend: " + commandToken);
                 break;
         }
     }
