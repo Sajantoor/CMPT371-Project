@@ -1,5 +1,7 @@
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * TCP Server used to accept connections when hosting a game. .
@@ -8,9 +10,9 @@ import java.net.*;
 public class Server {
     private static final int PORT = 3000;
     private static final int MAX_PLAYERS = 4;
-    private static final int BUFFER_SIZE = 1024;
     private static ServerSocket serverSocket = null;
     private static int playerCount = 0;
+    private static List<Socket> clientSockets = new ArrayList<>();
 
     public static void main(String[] args) {
         serverSocket = null;
@@ -22,14 +24,12 @@ public class Server {
             System.out.println("Server listening on port " + PORT);
 
             // Accept connections from clients and handle them
-            playerCount = 0;
             while (playerCount < MAX_PLAYERS) {
                 Socket newSocket = serverSocket.accept();
+                Server.addClientSocket(newSocket);
 
                 // threads for the server to handle multiple clients simultaneously.
                 new Thread(new ClientHandler(newSocket)).start();
-
-                playerCount++;
             }
 
         } catch (IOException e) {
@@ -53,5 +53,27 @@ public class Server {
             serverSocket.close();
         }
         // terminate connections
+    }
+
+    public synchronized static void addClientSocket(Socket socket) {
+        clientSockets.add(socket);
+        playerCount++;
+    }
+
+    public synchronized static void removeClientSocket(Socket socket) {
+        clientSockets.remove(socket);
+        playerCount--;
+    }
+
+    public static List<Socket> getClientSockets() {
+        return clientSockets;
+    }
+
+    public static boolean isPlayersLeft() {
+        return playerCount != 0;
+    }
+
+    public synchronized static int getPlayerCount() {
+        return playerCount;
     }
 }
