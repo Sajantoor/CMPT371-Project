@@ -48,8 +48,8 @@ class Block extends JPanel {
             @Override
             public void mouseReleased(MouseEvent e) {
                 isDrawing = false;
-                setBackground(coloredArea >= 0.5 * totalBoxArea ? crayonColor : backgroundColor);
-                if (coloredArea < 0.5 * totalBoxArea) {
+                setBackground(coloredArea >= 0.25 * totalBoxArea ? crayonColor : backgroundColor);
+                if (coloredArea < 0.25 * totalBoxArea) {
                     clearLines();
                 }
             }
