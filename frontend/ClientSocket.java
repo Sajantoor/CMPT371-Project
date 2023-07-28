@@ -9,9 +9,6 @@ public class ClientSocket {
     private boolean isClosed = false;
     private String playerID = null;
 
-    private final int PORT = 3000;
-    private final String HOST = "localhost";
-
     private ClientSocket() {
     }
 
@@ -23,7 +20,7 @@ public class ClientSocket {
     }
 
     public void connect() throws IOException {
-        socket = new Socket(HOST, PORT);
+        socket = new Socket(Constants.serverIP, Constants.serverPort);
         out = new PrintWriter(socket.getOutputStream(), true);
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         this.recieveMessages();

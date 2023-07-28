@@ -59,29 +59,21 @@ class ClientHandler implements Runnable {
         }
 
         String commandToken = tokens[0];
-
-        System.out.println(commandToken);
         broadcastMessage(message);
 
         switch (commandToken) {
-            case ("cursor"):
+            case (Constants.captureCommand):
+                // Capture the tile at a given position
 
                 break;
-            case ("draw"):
+            case (Constants.drawCommand):
+                // Start drawing a line
 
                 break;
-            case ("end"):
-
-                break;
-            case ("capture"):
-
-            case ("playerID"):
-
             default:
                 System.out.println("Unrecognized command: " + commandToken);
                 break;
         }
-
     }
 
     private void broadcastMessage(String message) {
