@@ -63,6 +63,14 @@ public class ClientSocket {
                 // A player captures a tile
                 // Tokens are <tile x> <tile y> <player id>
                 break;
+            case (Constants.drawError):
+                // TODO: handle the case where the player tries to draw on a tile that is
+                // already being drawn on by another player (This is a likely case)
+                break;
+            case (Constants.captureError):
+                // TODO: handle the case where the player tries to capture a tile that is
+                // already captured by another player (This case really shouldn't happen)
+                break;
             case (Constants.playerIDCommand):
                 setPlayerID(tokens[1]);
                 break;
