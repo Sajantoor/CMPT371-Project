@@ -91,6 +91,18 @@ class ClientHandler implements Runnable {
         }
     }
 
+    /**
+     * Handles the start draw event, checks if the tile is already being drawn by
+     * another user or captured by another user
+     * 
+     * If the tile is already being drawn or captured by another user, then don't
+     * draw and don't broadcast the message and send an error message to the client
+     * 
+     * Else mark the tile as being drawn by the player and broadcast the message to
+     * all other clients
+     * 
+     * @param tokens The tokens in the form: <command> <tile x> <tile y> <player id>
+     */
     private void handleStartDraw(String[] tokens) {
         // Tokens are <tile x> <tile y> <player id>
         int playerID = Integer.parseInt(tokens[3]);
@@ -112,6 +124,19 @@ class ClientHandler implements Runnable {
         broadcastMessage(String.join(" ", tokens));
     }
 
+    /**
+     * Handles the capture event, checks if the tile is already being drawn by
+     * another user or captured by another user
+     * 
+     * If the tile is already being drawn or captured by another user, then don't
+     * capture and don't broadcast the message and send an error message to the
+     * client
+     * 
+     * Else mark the tile as being captured by the player and broadcast the message
+     * to all other clients
+     * 
+     * @param tokens The tokens in the form: <command> <tile x> <tile y> <player id>
+     */
     private void handleCapture(String[] tokens) {
         // Tokens are <tile x> <tile y> <player id>
         int playerID = Integer.parseInt(tokens[3]);
@@ -133,6 +158,12 @@ class ClientHandler implements Runnable {
         broadcastMessage(String.join(" ", tokens));
     }
 
+    /**
+     * Handles the end draw event, unmarks the tile as being drawn by the player and
+     * broadcasts the message to all other clients
+     * 
+     * @param tokens The tokens in the form: <command> <tile x> <tile y> <player id>
+     */
     private void handleEndDraw(String[] tokens) {
         // Tokens are <tile x> <tile y> <player id>
         int playerID = Integer.parseInt(tokens[3]);
@@ -146,6 +177,11 @@ class ClientHandler implements Runnable {
         broadcastMessage(String.join(" ", tokens));
     }
 
+    /**
+     * Sends a message to the client
+     * 
+     * @param message
+     */
     private void sendMessage(String message) {
         out.println(message);
     }
