@@ -18,10 +18,7 @@ class ClientHandler implements Runnable {
     @Override
     public void run() {
         try {
-            // Handle client communication and game actions here.
-
             // You can use InputStream/OutputStream to handle communication with the client.
-
             OutputStream os = clientSocket.getOutputStream();
             InputStream is = clientSocket.getInputStream();
             out = new PrintWriter(os, true);
@@ -29,7 +26,7 @@ class ClientHandler implements Runnable {
 
             // Send playerID to the client when connecting
             String sendPlayerID = "playerID " + Server.getPlayerCount();
-            out.println(sendPlayerID);
+            sendMessage(sendPlayerID);
 
             String message;
 
@@ -47,7 +44,7 @@ class ClientHandler implements Runnable {
         }
     }
 
-    public void handleMessage(String message) {
+    private void handleMessage(String message) {
         if (message == null) {
             return;
         }
@@ -58,17 +55,22 @@ class ClientHandler implements Runnable {
             return;
         }
 
+        System.out.println("Received message: " + message);
+
         String commandToken = tokens[0];
-        broadcastMessage(message);
 
         switch (commandToken) {
             case (Constants.captureCommand):
-                // Capture the tile at a given position
-
+                handleCapture(tokens);
                 break;
-            case (Constants.drawCommand):
-                // Start drawing a line
-
+            case (Constants.startDrawCommand):
+                handleStartDraw(tokens);
+                break;
+            case (Constants.endDrawCommand):
+                handleEndDraw(tokens);
+                break;
+            case (Constants.cursorCommand):
+                broadcastMessage(message);
                 break;
             default:
                 System.out.println("Unrecognized command: " + commandToken);
@@ -87,5 +89,64 @@ class ClientHandler implements Runnable {
                 }
             }
         }
+    }
+
+    private void handleStartDraw(String[] tokens) {
+        // Tokens are <tile x> <tile y> <player id>
+        int playerID = Integer.parseInt(tokens[3]);
+        int tileX = Integer.parseInt(tokens[1]);
+        int tileY = Integer.parseInt(tokens[2]);
+        ServerBoard serverBoard = ServerBoard.getInstance();
+
+        // Check if the tile is already being captured or captured by another player
+        if (serverBoard.isTileBeingDrawnBy(tileX, tileY, playerID) == false) {
+            System.out.println("Tile is being drawn by another player" + serverBoard.getTile(tileX, tileY));
+            // the tile is being drawn on or captured by another player, so don't draw and
+            // don't broadcast the message
+            sendMessage(Constants.drawError);
+            return;
+        }
+
+        // Take the tile and mark it as drawn by the player
+        serverBoard.drawTile(tileX, tileY, playerID);
+        broadcastMessage(String.join(" ", tokens));
+    }
+
+    private void handleCapture(String[] tokens) {
+        // Tokens are <tile x> <tile y> <player id>
+        int playerID = Integer.parseInt(tokens[3]);
+        int tileX = Integer.parseInt(tokens[1]);
+        int tileY = Integer.parseInt(tokens[2]);
+
+        ServerBoard serverBoard = ServerBoard.getInstance();
+
+        // Check if the tile has been captured or is being drawn on by another player
+        if (serverBoard.isTileBeingDrawnBy(tileX, tileY, playerID) == false) {
+            // the tile is being captured or captured by another player, so don't capture
+            // and don't broadcast the message
+            sendMessage(Constants.captureError);
+            return;
+        }
+
+        // Take the tile and mark it as captured by the player
+        serverBoard.captureTile(tileX, tileY, playerID);
+        broadcastMessage(String.join(" ", tokens));
+    }
+
+    private void handleEndDraw(String[] tokens) {
+        // Tokens are <tile x> <tile y> <player id>
+        int playerID = Integer.parseInt(tokens[3]);
+        int tileX = Integer.parseInt(tokens[1]);
+        int tileY = Integer.parseInt(tokens[2]);
+
+        ServerBoard serverBoard = ServerBoard.getInstance();
+
+        // Unmark the tile as being drawn by the player
+        serverBoard.releaseTile(tileX, tileY, playerID);
+        broadcastMessage(String.join(" ", tokens));
+    }
+
+    private void sendMessage(String message) {
+        out.println(message);
     }
 }

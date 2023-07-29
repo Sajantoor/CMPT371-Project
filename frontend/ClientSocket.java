@@ -46,14 +46,13 @@ public class ClientSocket {
                 // TODO: Call the appropriate cursor's move method here
                 // Tokens are <x position> <y position> <player id>
                 break;
-            case (Constants.drawCommand):
+            case (Constants.startDrawCommand):
                 // TODO: Call the appropriate draw method here for this user
-                // Not sure if this is the best way to do this since we already get cursor
-                // updates from the server for all users. Maybe we can have a startDraw and
-                // endDraw command instead and track if the user is drawing or not
-                // Not sure what's the best way, please explore this...
-
-                // Tokens are <tile x> <tile y> <x position> <y position> <player id>
+                // Tokens are <tile x> <tile y> <player id>
+                break;
+            case (Constants.endDrawCommand):
+                // TODO: Call the appropriate draw method here for this user
+                // Tokens are <tile x> <tile y> <player id>
                 break;
             case (Constants.endCommand):
                 // TOOD: Call the appropriate game over method here

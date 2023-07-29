@@ -44,7 +44,7 @@ public class App {
         });
 
         for (int i = 0; i < 16; i++) {
-            Block block = new Block(frame);
+            Block block = new Block(frame, i / 4, i % 4);
             boardPanel.add(block);
         }
         containerPanel.add(boardPanel);
