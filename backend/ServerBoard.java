@@ -14,35 +14,48 @@ class ServerBoard {
         return instance;
     }
 
-    public void captureTile(int row, int col, int playerID) {
+    private void captureTile(int row, int col, int playerID) {
         // 4 is added to differentiate between drawing and captured tiles
         board[row][col] = playerID + 4;
     }
 
-    public void drawTile(int row, int col, int playerID) {
+    private void drawTile(int row, int col, int playerID) {
         board[row][col] = playerID;
     }
 
-    public boolean isTileFree(int row, int col) {
+    private boolean isTileFree(int row, int col) {
         return board[row][col] == 0;
     }
 
-    public boolean isTileBeingDrawnBy(int row, int col, int playerID) {
+    private boolean isTileBeingDrawnBy(int row, int col, int playerID) {
         return board[row][col] == playerID || isTileFree(row, col);
     }
 
-    public int[][] getBoard() {
-        return board;
-    }
-
-    public int getTile(int row, int col) {
-        return board[row][col];
-    }
-
-    public void releaseTile(int row, int col, int playerID) {
+    public synchronized boolean releaseTile(int row, int col, int playerID) {
         // Only release the tile if it is being drawn by the player
         if (isTileBeingDrawnBy(row, col, playerID)) {
             board[row][col] = 0;
+            return true;
         }
+
+        return false;
+    }
+
+    public synchronized boolean attemptDrawTile(int row, int col, int playerID) {
+        if (isTileBeingDrawnBy(row, col, playerID)) {
+            drawTile(row, col, playerID);
+            return true;
+        }
+
+        return false;
+    }
+
+    public synchronized boolean attemptCaptureTile(int row, int col, int playerID) {
+        if (isTileBeingDrawnBy(row, col, playerID)) {
+            captureTile(row, col, playerID);
+            return true;
+        }
+
+        return false;
     }
 }

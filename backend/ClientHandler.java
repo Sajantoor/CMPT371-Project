@@ -108,20 +108,16 @@ class ClientHandler implements Runnable {
         int playerID = Integer.parseInt(tokens[3]);
         int tileX = Integer.parseInt(tokens[1]);
         int tileY = Integer.parseInt(tokens[2]);
-        ServerBoard serverBoard = ServerBoard.getInstance();
 
-        // Check if the tile is already being captured or captured by another player
-        if (serverBoard.isTileBeingDrawnBy(tileX, tileY, playerID) == false) {
-            System.out.println("Tile is being drawn by another player" + serverBoard.getTile(tileX, tileY));
-            // the tile is being drawn on or captured by another player, so don't draw and
-            // don't broadcast the message
+        // Check if the tile is already being drawn on or captured by another player
+        // the tile is being drawn on or captured by another player, so don't draw and
+        // don't broadcast the message
+        if (ServerBoard.getInstance().attemptDrawTile(tileX, tileY, playerID)) {
+            broadcastMessage(String.join(" ", tokens));
+        } else {
+            System.out.println("Tile is being drawn by another player");
             sendMessage(Constants.drawError);
-            return;
         }
-
-        // Take the tile and mark it as drawn by the player
-        serverBoard.drawTile(tileX, tileY, playerID);
-        broadcastMessage(String.join(" ", tokens));
     }
 
     /**
@@ -143,19 +139,16 @@ class ClientHandler implements Runnable {
         int tileX = Integer.parseInt(tokens[1]);
         int tileY = Integer.parseInt(tokens[2]);
 
-        ServerBoard serverBoard = ServerBoard.getInstance();
-
         // Check if the tile has been captured or is being drawn on by another player
-        if (serverBoard.isTileBeingDrawnBy(tileX, tileY, playerID) == false) {
+        if (ServerBoard.getInstance().attemptCaptureTile(tileX, tileY, playerID)) {
+            // Take the tile and mark it as captured by the player
+            broadcastMessage(String.join(" ", tokens));
+            return;
+        } else {
             // the tile is being captured or captured by another player, so don't capture
             // and don't broadcast the message
             sendMessage(Constants.captureError);
-            return;
         }
-
-        // Take the tile and mark it as captured by the player
-        serverBoard.captureTile(tileX, tileY, playerID);
-        broadcastMessage(String.join(" ", tokens));
     }
 
     /**
