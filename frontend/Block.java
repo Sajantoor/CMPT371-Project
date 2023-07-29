@@ -23,6 +23,8 @@ class Block extends JPanel {
     private JFrame frame;
 
     Block(JFrame frame, int xCoord, int yCoord) {
+        this.xCoord = xCoord;
+        this.yCoord = yCoord;
         setPreferredSize(new Dimension(80, 80));
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
         this.frame = frame;
