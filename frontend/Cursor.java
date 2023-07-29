@@ -6,8 +6,10 @@ import java.awt.event.MouseEvent;
 class Cursor extends JPanel {
     private int x;
     private int y;
+    private int playerId;
 
-    Cursor() {
+    Cursor(int playerId) {
+        this.playerId = playerId;
         setPreferredSize(new Dimension(30, 30));
         setOpaque(false); // Remove the background color
         addMouseListener(new MouseAdapter() {
@@ -19,7 +21,7 @@ class Cursor extends JPanel {
                 repaint();
 
                 // Send the cursor's position to the server
-                String message = String.format("%s %d %d", Constants.cursorCommand, x, y);
+                String message = String.format("%s %d %d %d", Constants.cursorCommand, x, y, playerId);
                 ClientSocket.getInstance().send(message);
             }
         });

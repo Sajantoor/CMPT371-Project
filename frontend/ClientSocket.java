@@ -1,4 +1,6 @@
 import java.net.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.io.*;
 
 public class ClientSocket {
@@ -8,11 +10,13 @@ public class ClientSocket {
     private BufferedReader in;
     private boolean isClosed = false;
     private String playerID = null;
+    private CursorManager cursorManager; 
 
     private final int PORT = 3000;
     private final String HOST = "localhost";
 
     private ClientSocket() {
+        cursorManager = new CursorManager();
     }
 
     public static ClientSocket getInstance() {
@@ -29,25 +33,36 @@ public class ClientSocket {
         this.recieveMessages();
     }
 
+    public CursorManager getCursorManager() {
+        return this.cursorManager;
+    }
+
     public void send(String message) {
         // Output message with the player id
         out.println(message + " " + playerID);
     }
+    private Map<Integer, Cursor> cursors = new HashMap<>();
 
     private void handleMessage(String message) {
         if (message == null) {
             return;
         }
-
+    
         System.out.println("Message from server: " + message);
-
+    
         String[] tokens = message.split(" ");
         String commandToken = tokens[0];
-
+    
         switch (commandToken) {
             case (Constants.cursorCommand):
-                // TODO: Call the appropriate cursor's move method here
                 // Tokens are <x position> <y position> <player id>
+                int x = Integer.parseInt(tokens[1]);
+                int y = Integer.parseInt(tokens[2]);
+                int playerId = Integer.parseInt(tokens[3]);
+    
+                ClientSocket client = ClientSocket.getInstance(); // Get the ClientSocket instance
+                CursorManager cursorManager = client.getCursorManager(); // Get the CursorManager from the ClientSocket instance
+                cursorManager.moveCursor(playerId, x, y); // Use the CursorManager instance to call moveCursor()
                 break;
             case (Constants.drawCommand):
                 // TODO: Call the appropriate draw method here for this user
@@ -55,7 +70,7 @@ public class ClientSocket {
                 // updates from the server for all users. Maybe we can have a startDraw and
                 // endDraw command instead and track if the user is drawing or not
                 // Not sure what's the best way, please explore this...
-
+    
                 // Tokens are <tile x> <tile y> <x position> <y position> <player id>
                 break;
             case (Constants.endCommand):
@@ -75,6 +90,7 @@ public class ClientSocket {
                 break;
         }
     }
+    
 
     private void recieveMessages() {
         new Thread(() -> {
