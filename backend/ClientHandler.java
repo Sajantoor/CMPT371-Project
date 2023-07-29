@@ -15,6 +15,10 @@ class ClientHandler implements Runnable {
         this.clientSocket = clientSocket;
     }
 
+    private Socket getSocket() {
+        return clientSocket;
+    }
+
     @Override
     public void run() {
         try {
@@ -37,7 +41,7 @@ class ClientHandler implements Runnable {
 
             // Remove the client socket from the list of active client sockets upon
             // disconnection
-            Server.removeClientSocket(clientSocket);
+            Server.removeClientSocket(this);
             clientSocket.close();
         } catch (IOException e) {
             System.err.println("Error handling client: " + e.getMessage());
@@ -79,14 +83,9 @@ class ClientHandler implements Runnable {
     }
 
     private void broadcastMessage(String message) {
-        for (Socket socket : Server.getClientSockets()) {
-            if (socket != clientSocket && socket.isConnected()) {
-                try {
-                    PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
-                    writer.println(message);
-                } catch (IOException e) {
-                    System.err.println("Error broadcasting message to client: " + e.getMessage());
-                }
+        for (ClientHandler socket : Server.getClientSockets()) {
+            if (socket != this && socket.getSocket().isConnected()) {
+                socket.sendMessage(message);
             }
         }
     }

@@ -12,7 +12,7 @@ public class Server {
     private static final int MAX_PLAYERS = 4;
     private static ServerSocket serverSocket = null;
     private static int playerCount = 0;
-    private static List<Socket> clientSockets = new ArrayList<>();
+    private static List<ClientHandler> clientSockets = new ArrayList<>();
 
     public static void main(String[] args) {
         serverSocket = null;
@@ -26,10 +26,11 @@ public class Server {
             // Accept connections from clients and handle them
             while (playerCount < MAX_PLAYERS) {
                 Socket newSocket = serverSocket.accept();
-                Server.addClientSocket(newSocket);
+                ClientHandler clientHandler = new ClientHandler(newSocket);
+                Server.addClientSocket(clientHandler);
 
                 // threads for the server to handle multiple clients simultaneously.
-                new Thread(new ClientHandler(newSocket)).start();
+                new Thread(clientHandler).start();
             }
 
         } catch (IOException e) {
@@ -55,17 +56,17 @@ public class Server {
         // terminate connections
     }
 
-    public synchronized static void addClientSocket(Socket socket) {
+    public synchronized static void addClientSocket(ClientHandler socket) {
         clientSockets.add(socket);
         playerCount++;
     }
 
-    public synchronized static void removeClientSocket(Socket socket) {
+    public synchronized static void removeClientSocket(ClientHandler socket) {
         clientSockets.remove(socket);
         playerCount--;
     }
 
-    public static List<Socket> getClientSockets() {
+    public static List<ClientHandler> getClientSockets() {
         return clientSockets;
     }
 
