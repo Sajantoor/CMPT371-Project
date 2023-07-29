@@ -41,7 +41,6 @@ public class ClientSocket {
         // Output message with the player id
         out.println(message + " " + playerID);
     }
-    private Map<Integer, Cursor> cursors = new HashMap<>();
 
     private void handleMessage(String message) {
         if (message == null) {
