@@ -1,4 +1,6 @@
 import java.net.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.io.*;
 
 public class ClientSocket {
@@ -34,6 +36,12 @@ public class ClientSocket {
         out.println(message + " " + playerID);
     }
 
+    private final Map<String, Cursor> cursors = new HashMap<>(); // To store the cursors
+
+    public void registerCursor(String playerID, Cursor cursor) {
+        cursors.put(playerID, cursor);
+    }
+
     private void handleMessage(String message) {
         if (message == null) {
             return;
@@ -48,6 +56,13 @@ public class ClientSocket {
             case (Constants.cursorCommand):
                 // TODO: Call the appropriate cursor's move method here
                 // Tokens are <x position> <y position> <player id>
+                int x = Integer.parseInt(tokens[1]);
+                int y = Integer.parseInt(tokens[2]);
+                String playerID = tokens[3];
+                Cursor cursor = cursors.get(playerID);
+                if (cursor != null) {
+                    cursor.move(x, y);
+                }
                 break;
             case (Constants.drawCommand):
                 // TODO: Call the appropriate draw method here for this user
