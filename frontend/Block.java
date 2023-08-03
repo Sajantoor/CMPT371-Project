@@ -10,6 +10,8 @@ import java.util.List;
 import java.awt.image.BufferedImage;
 
 class Block extends JPanel {
+    private int xCoord; // x coordinate of the block
+    private int yCoord; // y coordinate of the block
     private boolean isDrawing = false;
     private Color crayonColor = Color.BLUE;
     private static Color backgroundColor = Color.WHITE;
@@ -20,7 +22,9 @@ class Block extends JPanel {
     private List<Point> drawnPointsInBox = new ArrayList<>();
     private JFrame frame;
 
-    Block(JFrame frame) {
+    Block(JFrame frame, int xCoord, int yCoord) {
+        this.xCoord = xCoord;
+        this.yCoord = yCoord;
         setPreferredSize(new Dimension(80, 80));
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
         this.frame = frame;
@@ -29,7 +33,8 @@ class Block extends JPanel {
         BufferedImage cursorImage = loadCursorImage(crayonColor);
         int hotspotX = cursorImage.getWidth() / 2 - 15;
         int hotspotY = cursorImage.getHeight() / 2 + 5;
-        java.awt.Cursor customCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImage, new Point(hotspotX, hotspotY), "crayonCursor");
+        java.awt.Cursor customCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImage,
+                new Point(hotspotX, hotspotY), "crayonCursor");
         // Set the custom cursor for the entire JFrame
         this.frame.setCursor(customCursor);
 
@@ -41,16 +46,26 @@ class Block extends JPanel {
                 draw(e);
 
                 // Send the draw command to the server
-                String message = String.format("%s %d %d", Constants.drawCommand, e.getX(), e.getY());
+                String message = String.format("%s %d %d", Constants.startDrawCommand, xCoord, yCoord);
                 ClientSocket.getInstance().send(message);
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
                 isDrawing = false;
-                setBackground(coloredArea >= 0.25 * totalBoxArea ? crayonColor : backgroundColor);
-                if (coloredArea < 0.25 * totalBoxArea) {
+                double threshold = 0.25 * totalBoxArea;
+
+                setBackground(coloredArea >= threshold ? crayonColor : backgroundColor);
+                ClientSocket socket = ClientSocket.getInstance();
+
+                if (coloredArea < threshold) {
+                    String message = String.format("%s %d %d", Constants.endDrawCommand, xCoord, yCoord);
+                    socket.send(message);
                     clearLines();
+                } else {
+                    // Send the end draw command to the server
+                    String message = String.format("%s %d %d", Constants.captureCommand, xCoord, yCoord);
+                    socket.send(message);
                 }
             }
         });
@@ -137,7 +152,8 @@ class Block extends JPanel {
             BufferedImage image = ImageIO.read(imageURL);
 
             // Create a new BufferedImage with the same dimensions as the original image
-            BufferedImage buffImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            BufferedImage buffImage = new BufferedImage(image.getWidth(), image.getHeight(),
+                    BufferedImage.TYPE_INT_ARGB);
             Graphics2D g = buffImage.createGraphics();
 
             g.setColor(crayonColor);
@@ -152,7 +168,6 @@ class Block extends JPanel {
         }
         return null;
     }
-
 
     @Override
     public Insets getInsets() {
