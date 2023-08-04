@@ -1,13 +1,9 @@
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.awt.image.BufferedImage;
 
 class Block extends JPanel {
     private int xCoord; // x coordinate of the block
@@ -20,23 +16,12 @@ class Block extends JPanel {
     private int lastXValue = -1;
     private int lastYValue = -1;
     private List<Point> drawnPointsInBox = new ArrayList<>();
-    private JFrame frame;
 
-    Block(JFrame frame, int xCoord, int yCoord) {
+    Block(int xCoord, int yCoord) {
         this.xCoord = xCoord;
         this.yCoord = yCoord;
         setPreferredSize(new Dimension(80, 80));
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        this.frame = frame;
-
-        // Load the cursor image
-        BufferedImage cursorImage = loadCursorImage(crayonColor);
-        int hotspotX = cursorImage.getWidth() / 2 - 15;
-        int hotspotY = cursorImage.getHeight() / 2 + 5;
-        java.awt.Cursor customCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImage,
-                new Point(hotspotX, hotspotY), "crayonCursor");
-        // Set the custom cursor for the entire JFrame
-        this.frame.setCursor(customCursor);
 
         addMouseListener(new MouseAdapter() {
             @Override
@@ -142,31 +127,6 @@ class Block extends JPanel {
             Point p2 = drawnPointsInBox.get(i + 1);
             g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
         }
-    }
-
-    // Get cursor image
-    private static BufferedImage loadCursorImage(Color crayonColor) {
-        try {
-            // import the crayon image
-            URL imageURL = App.class.getResource("assets/crayon_32px.png");
-            BufferedImage image = ImageIO.read(imageURL);
-
-            // Create a new BufferedImage with the same dimensions as the original image
-            BufferedImage buffImage = new BufferedImage(image.getWidth(), image.getHeight(),
-                    BufferedImage.TYPE_INT_ARGB);
-            Graphics2D g = buffImage.createGraphics();
-
-            g.setColor(crayonColor);
-            g.drawImage(image, 0, 0, null);
-
-            // Dispose of the Graphics object
-            g.dispose();
-
-            return buffImage;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     @Override
