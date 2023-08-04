@@ -10,7 +10,7 @@ class Block extends JPanel {
     private int yCoord; // y coordinate of the block
     private boolean isDrawing = false;
     private boolean captured = false;
-    private Color crayonColor = Color.BLUE;
+    private Color crayonColor = Constants.playerColors[ClientSocket.getInstance().getPlayerID()];
     private static Color backgroundColor = Color.WHITE;
     private int totalBoxArea = 0;
     private int coloredArea = 0;

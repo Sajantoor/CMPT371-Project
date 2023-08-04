@@ -112,4 +112,8 @@ public class ClientSocket {
 
         playerID = id;
     }
+
+    public int getPlayerID() {
+        return Integer.parseInt(playerID);
+    }
 }
