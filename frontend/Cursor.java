@@ -7,19 +7,21 @@ import java.net.URL;
 
 class Cursor extends JComponent {
     private JFrame frame;
+    private Color color = Color.BLUE;
 
     Cursor(JFrame frame) {
         this.frame = frame;
 
         // Load the cursor image
-        BufferedImage cursorImage = loadCursorImage(Color.BLUE);
+        BufferedImage cursorImage = loadCursorImage(color);
         int hotspotX = cursorImage.getWidth() / 2 - 15;
         int hotspotY = cursorImage.getHeight() / 2 + 5;
-        java.awt.Cursor customCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImage, new Point(hotspotX, hotspotY), "crayonCursor");
+        java.awt.Cursor customCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImage,
+                new Point(hotspotX, hotspotY), "crayonCursor");
         // Set the custom cursor for the entire JFrame
         this.frame.setCursor(customCursor);
     }
-    
+
     // Get cursor image
     private static BufferedImage loadCursorImage(Color crayonColor) {
         try {
@@ -28,7 +30,8 @@ class Cursor extends JComponent {
             BufferedImage image = ImageIO.read(imageURL);
 
             // Create a new BufferedImage with the same dimensions as the original image
-            BufferedImage buffImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            BufferedImage buffImage = new BufferedImage(image.getWidth(), image.getHeight(),
+                    BufferedImage.TYPE_INT_ARGB);
             Graphics2D g = buffImage.createGraphics();
 
             g.setColor(crayonColor);
@@ -39,8 +42,7 @@ class Cursor extends JComponent {
 
             return buffImage;
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        return null;
     }
 }
