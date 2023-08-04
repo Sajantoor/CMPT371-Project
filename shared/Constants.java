@@ -1,3 +1,5 @@
+import java.awt.Color;
+
 public class Constants {
     // Commands
     public static final String cursorCommand = "cursor";
@@ -17,4 +19,7 @@ public class Constants {
     // Board
     public static final int boardRows = 4;
     public static final int boardCols = 4;
+
+    // Player colors
+    public static final Color[] playerColors = { Color.BLUE, Color.RED, Color.GREEN, Color.YELLOW };
 }

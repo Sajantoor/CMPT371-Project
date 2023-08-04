@@ -29,7 +29,7 @@ class ClientHandler implements Runnable {
             in = new BufferedReader(new InputStreamReader(is));
 
             // Send playerID to the client when connecting
-            String sendPlayerID = "playerID " + Server.getPlayerCount();
+            String sendPlayerID = "playerID " + (Server.getPlayerCount() - 1);
             sendMessage(sendPlayerID);
 
             String message;
