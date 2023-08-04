@@ -36,15 +36,27 @@ public class ClientSocket {
             return;
         }
 
-        System.out.println("Message from server: " + message);
-
         String[] tokens = message.split(" ");
         String commandToken = tokens[0];
 
         switch (commandToken) {
             case (Constants.cursorCommand):
-                // TODO: Call the appropriate cursor's move method here
                 // Tokens are <x position> <y position> <player id>
+                int x = Integer.parseInt(tokens[1]);
+                int y = Integer.parseInt(tokens[2]);
+                int playerID = Integer.parseInt(tokens[3]);
+                CursorManager cursorManager = CursorManager.getInstance();
+                Cursor cursor = cursorManager.getCursor(playerID);
+
+                if (cursor == null) {
+                    System.out.println("Creating new cursor for player: " + playerID);
+                    cursor = new Cursor(playerID);
+                    cursorManager.addCursor(cursor);
+                }
+
+                System.out.println("Moving cursor: " + x + " " + y + " " + playerID);
+                cursor.move(x, y);
+
                 break;
             case (Constants.startDrawCommand):
                 // TODO: Call the appropriate draw method here for this user

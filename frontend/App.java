@@ -13,9 +13,6 @@ public class App {
     }
 
     private static void createAndShowGUI() {
-        JFrame frame = new JFrame("Deny and Conquer");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setPreferredSize(new Dimension(400, 400));
 
         JPanel boardPanel = new JPanel(new GridLayout(4, 4, 5, 5)) {
             @Override
@@ -29,8 +26,13 @@ public class App {
             boardPanel.add(block);
         }
 
-        Cursor cursor = new Cursor(frame);
-        frame.add(cursor);
+        // TODO: Create new cursor object for the player
+        JFrame frame = Frame.getInstance().getFrame();
+        CursorManager cm = CursorManager.getInstance();
+        new Cursor();
+        for (int i = 0; i < 3; i++) {
+            cm.addCursor(new Cursor(i + 1));
+        }
 
         frame.add(boardPanel);
         frame.pack();
