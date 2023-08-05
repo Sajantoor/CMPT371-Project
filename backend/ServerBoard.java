@@ -1,9 +1,13 @@
 class ServerBoard {
     private static ServerBoard instance;
     private int[][] board;
+    private int captureCount;
+    private int[] playerScores;
 
     ServerBoard() {
         board = new int[Constants.boardRows][Constants.boardCols];
+        captureCount = 0;
+        playerScores = new int[Server.getPlayerCount()];
     }
 
     public static ServerBoard getInstance() {
@@ -53,9 +57,22 @@ class ServerBoard {
     public synchronized boolean attemptCaptureTile(int row, int col, int playerID) {
         if (isTileBeingDrawnBy(row, col, playerID)) {
             captureTile(row, col, playerID);
+            captureCount++;
+            playerScores[playerID]++;
             return true;
         }
 
         return false;
+    }
+
+    public synchronized boolean allTilesCaptured() {
+        if (captureCount == Constants.boardCols * Constants.boardRows) {
+            return true;
+        }
+        return false;
+    }
+
+    public int[] getPlayerScores() {
+        return playerScores;
     }
 }

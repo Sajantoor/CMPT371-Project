@@ -17,7 +17,7 @@ class Cursor extends JComponent {
     private int playerID = 0;
 
     public Cursor() {
-        this.frame = Frame.getInstance().getFrame();
+        this.frame = Screens.getInstance().getFrame();
 
         cursorImage = loadCursorImage(color);
 
@@ -49,7 +49,7 @@ class Cursor extends JComponent {
     }
 
     public Cursor(int playerID) {
-        this.frame = Frame.getInstance().getFrame();
+        this.frame = Screens.getInstance().getFrame();
         this.playerID = playerID;
 
         // Load the cursor image
