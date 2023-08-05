@@ -16,7 +16,6 @@ public class Screens {
     }
 
     public void start() {
-        System.out.println(Constants.playerColors[0].toString());
         frame = new JFrame("Deny and Conquer");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setPreferredSize(new Dimension(400, 400));

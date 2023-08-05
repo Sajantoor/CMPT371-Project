@@ -93,6 +93,15 @@ class ClientHandler implements Runnable {
         }
     }
 
+    private void broadcastMessageToAll(String message) {
+        for (ClientHandler socket : Server.getClientSockets()) {
+            if (socket != this && socket.getSocket().isConnected()) {
+                socket.sendMessage(message);
+            }
+            out.println(message);
+        }
+    }
+
     /**
      * Handles the start draw event, checks if the tile is already being drawn by
      * another user or captured by another user
@@ -145,8 +154,6 @@ class ClientHandler implements Runnable {
         if (ServerBoard.getInstance().attemptCaptureTile(tileX, tileY, playerID)) {
             // Take the tile and mark it as captured by the player
             broadcastMessage(String.join(" ", tokens));
-            // Capture messages also sent to client
-            sendMessage(String.join(" ", tokens));
 
             if (ServerBoard.getInstance().allTilesCaptured()) {
                 endGame();
@@ -189,8 +196,7 @@ class ClientHandler implements Runnable {
         String message = String.format("%s %d", Constants.startCommand, Server.getPlayerCount());
 
         // Send that the game is starting all players
-        broadcastMessage(message);
-        sendMessage(message);
+        broadcastMessageToAll(message);
     }
 
     public void endGame() {
@@ -203,8 +209,7 @@ class ClientHandler implements Runnable {
             message += playerScores[i] + " ";
         }
 
-        broadcastMessage(message);
-        sendMessage(message);
+        broadcastMessageToAll(message);
     }
 
     /**
