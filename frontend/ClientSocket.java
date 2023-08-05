@@ -46,10 +46,6 @@ public class ClientSocket {
                 // TODO: Call the appropriate cursor's move method here
                 // Tokens are <x position> <y position> <player id>
                 break;
-            case (Constants.startDrawCommand):
-                // TODO: Call the appropriate draw method here for this user
-                // Tokens are <tile x> <tile y> <player id>
-                break;
             case (Constants.endDrawCommand):
                 // TODO: Call the appropriate draw method here for this user
                 // Tokens are <tile x> <tile y> <player id>
@@ -72,7 +68,7 @@ public class ClientSocket {
                 // TODO: handle the case where the player tries to draw on a tile that is
                 // already being drawn on by another player (This is a likely case)
                 break;
-            case (Constants.drawingPixels):
+            case (Constants.startDrawCommand):
                 System.out.println("Drawing pixels");
                 System.out.println(message);
                 int tilePositionX = Integer.parseInt(tokens[1]);

@@ -68,15 +68,12 @@ class ClientHandler implements Runnable {
                 handleCapture(tokens);
                 break;
             case (Constants.startDrawCommand):
-                handleStartDraw(tokens);
+                broadcastMessage(message);
                 break;
             case (Constants.endDrawCommand):
                 handleEndDraw(tokens);
                 break;
             case (Constants.cursorCommand):
-                broadcastMessage(message);
-                break;
-            case(Constants.drawingPixels):
                 broadcastMessage(message);
                 break;
             case(Constants.clearPixels):

@@ -34,10 +34,6 @@ class Block extends JPanel {
                 isDrawing = true;
                 totalBoxArea = getWidth() * getHeight();
                 draw(e);
-
-                // Send the draw command to the server
-                String message = String.format("%s %d %d", Constants.startDrawCommand, xCoord, yCoord);
-                socket.send(message);
             }
 
             @Override
@@ -70,7 +66,7 @@ class Block extends JPanel {
                 }
                 if (isDrawing) {
                     draw(e);
-                    String message = String.format("%s %d %d %d %d", Constants.drawingPixels, xCoord, yCoord, e.getX(), e.getY());
+                    String message = String.format("%s %d %d %d %d", Constants.startDrawCommand, xCoord, yCoord, e.getX(), e.getY());
                     socket.send(message);
                 }
             }
@@ -148,7 +144,6 @@ class Block extends JPanel {
     }
 
     public void draw_pixel(int x, int y, int playerID) {
-        System.out.println("Drawing pixel at " + x + " " + y);
         if (captured) {
             return;
         }
@@ -157,7 +152,7 @@ class Block extends JPanel {
         if (coloredArea < 0.25 * totalBoxArea) {
             clearLines();
         }
-
+        crayonColor = Constants.playerColors[playerID];
         // Add the point to the list of drawn points and repaint the panel
         drawnPointsInBox.add(new Point(x, y));
         repaint();
