@@ -61,7 +61,7 @@ public class ClientSocket {
                     playerScores[i] = tokens[i + 1];
                 }
 
-                Screens.getInstance().endGameScreen();
+                Screens.getInstance().endGameScreen(playerScores);
                 break;
             case (Constants.captureCommand):
                 // TODO: Change the tile's color to a player's color
