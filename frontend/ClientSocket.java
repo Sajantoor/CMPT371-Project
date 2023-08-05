@@ -66,7 +66,7 @@ public class ClientSocket {
                 int tileX = Integer.parseInt(tokens[1]);
                 int tileY = Integer.parseInt(tokens[2]);
 
-                App.setBlockAsCaptured(tileX, tileY, playerID);
+                BlockManager.getInstance().setBlockAsCaptured(tileX, tileY, playerID);
                 break;
             case (Constants.drawError):
                 // TODO: handle the case where the player tries to draw on a tile that is

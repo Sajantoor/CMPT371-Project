@@ -10,7 +10,8 @@ class Block extends JPanel {
     private int yCoord; // y coordinate of the block
     private boolean isDrawing = false;
     private boolean captured = false;
-    private Color crayonColor = Constants.playerColors[ClientSocket.getInstance().getPlayerID()];
+    ClientSocket socket = ClientSocket.getInstance();
+    private Color crayonColor = Constants.playerColors[socket.getPlayerID()];
     private static Color backgroundColor = Color.WHITE;
     private int totalBoxArea = 0;
     private int coloredArea = 0;
@@ -27,35 +28,36 @@ class Block extends JPanel {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                if (!captured) {
-                    isDrawing = true;
-                    totalBoxArea = getWidth() * getHeight();
-                    draw(e);
-
-                    // Send the draw command to the server
-                    String message = String.format("%s %d %d", Constants.startDrawCommand, xCoord, yCoord);
-                    ClientSocket.getInstance().send(message);
+                if (captured) {
+                    return;
                 }
+                isDrawing = true;
+                totalBoxArea = getWidth() * getHeight();
+                draw(e);
+
+                // Send the draw command to the server
+                String message = String.format("%s %d %d", Constants.startDrawCommand, xCoord, yCoord);
+                socket.send(message);
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                if (!captured) {
-                    isDrawing = false;
-                    double threshold = 0.25 * totalBoxArea;
+                if (captured) {
+                    return;
+                }
+                isDrawing = false;
+                double threshold = 0.25 * totalBoxArea;
 
-                    setBackground(coloredArea >= threshold ? crayonColor : backgroundColor);
-                    ClientSocket socket = ClientSocket.getInstance();
+                setBackground(coloredArea >= threshold ? crayonColor : backgroundColor);
 
-                    if (coloredArea < threshold) {
-                        String message = String.format("%s %d %d", Constants.endDrawCommand, xCoord, yCoord);
-                        socket.send(message);
-                        clearLines();
-                    } else {
-                        // Send the end draw command to the server
-                        String message = String.format("%s %d %d", Constants.captureCommand, xCoord, yCoord);
-                        socket.send(message);
-                    }
+                if (coloredArea < threshold) {
+                    String message = String.format("%s %d %d", Constants.endDrawCommand, xCoord, yCoord);
+                    socket.send(message);
+                    clearLines();
+                } else {
+                    // Send the end draw command to the server
+                    String message = String.format("%s %d %d", Constants.captureCommand, xCoord, yCoord);
+                    socket.send(message);
                 }
             }
         });
@@ -63,7 +65,10 @@ class Block extends JPanel {
         addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
-                if (!captured && isDrawing) {
+                if (captured) {
+                    return;
+                }
+                if (isDrawing) {
                     draw(e);
                 }
             }
