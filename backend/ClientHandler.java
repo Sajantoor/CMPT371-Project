@@ -10,7 +10,7 @@ class ClientHandler implements Runnable {
     private Socket clientSocket;
     private PrintWriter out;
     private BufferedReader in;
-    private boolean isClientConnected;
+    private boolean isClientConnected;//status variable of each thread
 
     public ClientHandler(Socket clientSocket) {
         this.clientSocket = clientSocket;

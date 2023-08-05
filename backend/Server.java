@@ -34,7 +34,7 @@ public class Server {
                 // threads for the server to handle multiple clients simultaneously.
                 new Thread(clientHandler).start();
             }
-            startFaultTolerance();
+            startFaultTolerance(); 
 
         } catch (IOException e) {
             if (playerCount > MAX_PLAYERS) {
@@ -81,8 +81,8 @@ public class Server {
         @Override
         public void run() { //run whenever a client is not responsive in its 5 second ping
             for (ClientHandler clientHandler : clientSockets) {
-                if (!clientHandler.getClientAlive()) {
-                    removeClientSocket(clientHandler);
+                if (!clientHandler.getClientAlive()) {//added client status to client handler
+                    removeClientSocket(clientHandler);//
                 }
             }
         }
