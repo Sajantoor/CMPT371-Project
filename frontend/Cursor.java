@@ -33,7 +33,16 @@ class Cursor extends JComponent {
         // Add event listeners for mouse movement
         this.frame.addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseMoved(MouseEvent e) {
-                String message = String.format("%s %d %d", Constants.cursorCommand, e.getX(), e.getY());
+                // convert mouse coordinates to relative x and y coordinates
+
+                // get mouse location relative to the frame
+                int x = e.getX();
+                int y = e.getY();
+
+                double resX = (double) x / frame.getWidth();
+                double resY = (double) y / frame.getHeight();
+
+                String message = String.format("%s %f %f", Constants.cursorCommand, resX, resY);
                 ClientSocket.getInstance().send(message);
             }
         });
@@ -49,8 +58,8 @@ class Cursor extends JComponent {
 
         // add the cursor image to the frame and set the cursor to the center of the
         // image
-        this.cursorX = cursorImage.getWidth() / 2 - calculateHotspotX();
-        this.cursorY = cursorImage.getHeight() / 2 - calculateHotspotY();
+        this.cursorX = 0;
+        this.cursorY = 0;
         cursorLabel.setBounds(cursorX, cursorY, cursorImage.getWidth(), cursorImage.getHeight());
 
         this.frame.add(cursorLabel);
@@ -64,12 +73,12 @@ class Cursor extends JComponent {
         return cursorImage.getHeight() / 2 + 5;
     }
 
-    public void move(int x, int y) {
-        this.cursorX = x - calculateHotspotX();
-        this.cursorY = y - calculateHotspotY();
+    public void move(double x, double y) {
+        this.cursorX = (int) (x * frame.getWidth()) + calculateHotspotX();
+        this.cursorY = (int) (y * frame.getHeight()) - calculateHotspotY();
 
-        cursorLabel.setBounds(x, y, cursorLabel.getWidth(), cursorLabel.getHeight());
-        frame.repaint();
+        cursorLabel.setBounds(this.cursorX, this.cursorY, cursorLabel.getWidth(), cursorLabel.getHeight());
+        this.repaint();
     }
 
     public int getPlayerID() {
