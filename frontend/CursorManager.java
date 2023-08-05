@@ -5,8 +5,6 @@ public class CursorManager {
     private static CursorManager instance = null;
     private List<Cursor> cursors;
 
-    // make this a singleton
-
     private CursorManager() {
         cursors = new ArrayList<Cursor>();
         instance = this;
@@ -33,4 +31,12 @@ public class CursorManager {
         return null;
     }
 
+    public void createCursors() {
+        // New cursor is for the player
+        new Cursor();
+        // Other cursors are for other players
+        for (int i = 0; i < 4; i++) {
+            addCursor(new Cursor(i));
+        }
+    }
 }

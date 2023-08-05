@@ -22,13 +22,8 @@ public class App {
 
         BlockManager.getInstance().addBlocksToPanel(boardPanel);
 
-        // TODO: Create new cursor object for the player
         JFrame frame = Frame.getInstance().getFrame();
-        CursorManager cm = CursorManager.getInstance();
-        new Cursor();
-        for (int i = 0; i < 4; i++) {
-            cm.addCursor(new Cursor(i));
-        }
+        CursorManager.getInstance().createCursors();
 
         frame.add(boardPanel);
         frame.pack();
