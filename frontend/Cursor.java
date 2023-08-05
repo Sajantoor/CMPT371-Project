@@ -62,7 +62,16 @@ class Cursor extends JComponent {
         this.cursorY = 0;
         cursorLabel.setBounds(cursorX, cursorY, cursorImage.getWidth(), cursorImage.getHeight());
 
+        cursorLabel.setVisible(false);
         this.frame.add(cursorLabel);
+    }
+
+    public void show() {
+        if (isShowing()) {
+            return;
+        }
+
+        cursorLabel.setVisible(true);
     }
 
     private int calculateHotspotX() {
@@ -74,8 +83,9 @@ class Cursor extends JComponent {
     }
 
     public void move(double x, double y) {
-        this.cursorX = (int) (x * frame.getWidth()) + calculateHotspotX();
-        this.cursorY = (int) (y * frame.getHeight()) - calculateHotspotY();
+        // This is some hacky shit to get the cursor to appear in the right spot...
+        this.cursorX = (int) (x * frame.getWidth()) - 10;
+        this.cursorY = (int) (y * frame.getHeight()) - (calculateHotspotY() * 2);
 
         cursorLabel.setBounds(this.cursorX, this.cursorY, cursorLabel.getWidth(), cursorLabel.getHeight());
         this.repaint();

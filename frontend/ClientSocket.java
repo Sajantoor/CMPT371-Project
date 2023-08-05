@@ -42,19 +42,7 @@ public class ClientSocket {
         switch (commandToken) {
             case (Constants.cursorCommand):
                 // Tokens are <x position> <y position> <player id>
-                double x = Double.parseDouble(tokens[1]);
-                double y = Double.parseDouble(tokens[2]);
-                int playerID = Integer.parseInt(tokens[3]);
-                CursorManager cursorManager = CursorManager.getInstance();
-                Cursor cursor = cursorManager.getCursor(playerID);
-
-                if (cursor == null) {
-                    System.out.println("Creating new cursor for player: " + playerID);
-                    cursor = new Cursor(playerID);
-                    cursorManager.addCursor(cursor);
-                }
-
-                cursor.move(x, y);
+                handleCursorCommand(tokens);
                 break;
             case (Constants.startDrawCommand):
                 // TODO: Call the appropriate draw method here for this user
@@ -121,6 +109,23 @@ public class ClientSocket {
         }
 
         playerID = id;
+    }
+
+    public void handleCursorCommand(String[] tokens) {
+        double x = Double.parseDouble(tokens[1]);
+        double y = Double.parseDouble(tokens[2]);
+        int playerID = Integer.parseInt(tokens[3]);
+        CursorManager cursorManager = CursorManager.getInstance();
+        Cursor cursor = cursorManager.getCursor(playerID);
+
+        if (cursor == null) {
+            System.out.println("Creating new cursor for player: " + playerID);
+            cursor = new Cursor(playerID);
+            cursorManager.addCursor(cursor);
+        }
+
+        cursor.show();
+        cursor.move(x, y);
     }
 
     public int getPlayerID() {
