@@ -10,13 +10,19 @@ class ClientHandler implements Runnable {
     private Socket clientSocket;
     private PrintWriter out;
     private BufferedReader in;
+    private boolean isClientConnected;
 
     public ClientHandler(Socket clientSocket) {
         this.clientSocket = clientSocket;
+        this.isClientConnected = true;
     }
 
     private Socket getSocket() {
         return clientSocket;
+    }
+
+    public boolean getClientAlive() {
+        return isClientConnected;
     }
 
     @Override
@@ -45,6 +51,7 @@ class ClientHandler implements Runnable {
             clientSocket.close();
         } catch (IOException e) {
             System.err.println("Error handling client: " + e.getMessage());
+            isClientConnected = false;
         }
     }
 
