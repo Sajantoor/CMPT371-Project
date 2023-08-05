@@ -55,8 +55,13 @@ public class ClientSocket {
                 // Tokens are <tile x> <tile y> <player id>
                 break;
             case (Constants.endCommand):
-                // TOOD: Call the appropriate game over method here
-                // Game over
+                // Get each players score from the server
+                String[] playerScores = new String[tokens.length - 1];
+                for (int i = 0; i < playerScores.length; i++) {
+                    playerScores[i] = tokens[i + 1];
+                }
+
+                Screens.getInstance().endGameScreen();
                 break;
             case (Constants.captureCommand):
                 // TODO: Change the tile's color to a player's color
@@ -77,7 +82,6 @@ public class ClientSocket {
                 // already captured by another player (This case really shouldn't happen)
                 break;
             case (Constants.startCommand):
-                BlockManager.getInstance().setPlayers(Integer.parseInt(tokens[1]));
                 Screens.getInstance().createAndShowGUI();
                 break;
             case (Constants.playerIDCommand):

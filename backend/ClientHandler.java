@@ -147,6 +147,10 @@ class ClientHandler implements Runnable {
             broadcastMessage(String.join(" ", tokens));
             // Capture messages also sent to client
             sendMessage(String.join(" ", tokens));
+
+            if (ServerBoard.getInstance().allTilesCaptured()) {
+                endGame();
+            }
             return;
         } else {
             // the tile is being captured or captured by another player, so don't capture
@@ -185,6 +189,20 @@ class ClientHandler implements Runnable {
         String message = String.format("%s %d", Constants.startCommand, Server.getPlayerCount());
 
         // Send that the game is starting all players
+        broadcastMessage(message);
+        sendMessage(message);
+    }
+
+    public void endGame() {
+        int[] playerScores = ServerBoard.getInstance().getPlayerScores();
+
+        String message = Constants.endCommand + " ";
+
+        // Send each players score back
+        for (int i = 0; i < playerScores.length; i++) {
+            message += playerScores[i] + " ";
+        }
+
         broadcastMessage(message);
         sendMessage(message);
     }

@@ -2,15 +2,10 @@ import javax.swing.JPanel;
 
 public class BlockManager {
     private static BlockManager instance = null;
-    private int BOARD_SIZE;
     private Block[][] blocks;
-    private int captureCount;
-    private int[] playerScores;
 
     private BlockManager() {
-        BOARD_SIZE = 2;
-        blocks = new Block[BOARD_SIZE][BOARD_SIZE]; // Initialize the 2D array
-        captureCount = 0;
+        blocks = new Block[Constants.boardCols][Constants.boardRows]; // Initialize the 2D array
     }
 
     public static BlockManager getInstance() {
@@ -21,8 +16,8 @@ public class BlockManager {
     }
 
     public void addBlocksToPanel(JPanel boardPanel) {
-        for (int i = 0; i < BOARD_SIZE; i++) {
-            for (int j = 0; j < BOARD_SIZE; j++) {
+        for (int i = 0; i < Constants.boardRows; i++) {
+            for (int j = 0; j < Constants.boardCols; j++) {
                 Block block = new Block(i, j);
                 blocks[i][j] = block; // Store the reference in the array
                 boardPanel.add(block);
@@ -32,20 +27,5 @@ public class BlockManager {
 
     public void setBlockAsCaptured(int x, int y, int playerID) {
         blocks[x][y].setCaptured(playerID);
-        captureCount++;
-
-        playerScores[playerID]++;
-
-        if (captureCount == BOARD_SIZE * BOARD_SIZE) {
-            Screens.getInstance().endGameScreen();
-            // Print each player's score
-            for (int i = 0; i < playerScores.length; i++) {
-                System.out.println("Player " + i + " score: " + playerScores[i]);
-            }
-        }
-    }
-
-    public void setPlayers(int playerNum) {
-        playerScores = new int[playerNum];
     }
 }
