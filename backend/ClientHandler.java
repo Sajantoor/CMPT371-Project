@@ -142,6 +142,8 @@ class ClientHandler implements Runnable {
         if (ServerBoard.getInstance().attemptCaptureTile(tileX, tileY, playerID)) {
             // Take the tile and mark it as captured by the player
             broadcastMessage(String.join(" ", tokens));
+            // Capture messages also sent to client
+            sendMessage(String.join(" ", tokens));
             return;
         } else {
             // the tile is being captured or captured by another player, so don't capture

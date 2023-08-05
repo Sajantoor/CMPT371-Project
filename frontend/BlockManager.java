@@ -4,10 +4,12 @@ public class BlockManager {
     private static BlockManager instance = null;
     private int BOARD_SIZE;
     private Block[][] blocks;
+    private int captureCount;
 
     private BlockManager() {
-        BOARD_SIZE = 4;
+        BOARD_SIZE = 1;
         blocks = new Block[BOARD_SIZE][BOARD_SIZE]; // Initialize the 2D array
+        captureCount = 0;
     }
 
     public static BlockManager getInstance() {
@@ -29,6 +31,11 @@ public class BlockManager {
 
     public void setBlockAsCaptured(int x, int y, int playerID) {
         blocks[x][y].setCaptured(playerID);
+        captureCount++;
+
+        if (captureCount == BOARD_SIZE * BOARD_SIZE) {
+            Screens.getInstance().endGameScreen();
+        }
     }
 
 }
