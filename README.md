@@ -27,9 +27,13 @@ The game we've created is Deny and Conquer.
 # Group Members
 
 Arjun Singh - 20%
+
 Gurinder Bhogal - 20%
+
 Jessy Chahal - 20%
+
 Sajan Toor - 20%
+
 Yousef Haiba - 20%
 
 # Video of Demo
