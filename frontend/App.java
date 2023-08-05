@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 
 public class App {
-
     public static void main(String[] args) {
         try {
             ClientSocket.getInstance().connect();
@@ -24,10 +23,7 @@ public class App {
             }
         };
 
-        for (int i = 0; i < 16; i++) {
-            Block block = new Block(i / 4, i % 4);
-            boardPanel.add(block);
-        }
+        BlockManager.getInstance().addBlocksToPanel(boardPanel);
 
         Cursor cursor = new Cursor(frame);
         frame.add(cursor);
@@ -37,5 +33,4 @@ public class App {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
-
 }
