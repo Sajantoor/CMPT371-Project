@@ -9,7 +9,9 @@ class Block extends JPanel {
     private int xCoord; // x coordinate of the block
     private int yCoord; // y coordinate of the block
     private boolean isDrawing = false;
-    private Color crayonColor = Color.BLUE;
+    private boolean captured = false;
+    private ClientSocket socket = ClientSocket.getInstance();
+    private Color crayonColor = Constants.playerColors[socket.getPlayerID()];
     private static Color backgroundColor = Color.WHITE;
     private int totalBoxArea = 0;
     private int coloredArea = 0;
@@ -26,22 +28,27 @@ class Block extends JPanel {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
+                if (captured) {
+                    return;
+                }
                 isDrawing = true;
                 totalBoxArea = getWidth() * getHeight();
                 draw(e);
 
                 // Send the draw command to the server
                 String message = String.format("%s %d %d", Constants.startDrawCommand, xCoord, yCoord);
-                ClientSocket.getInstance().send(message);
+                socket.send(message);
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
+                if (captured) {
+                    return;
+                }
                 isDrawing = false;
                 double threshold = 0.25 * totalBoxArea;
 
                 setBackground(coloredArea >= threshold ? crayonColor : backgroundColor);
-                ClientSocket socket = ClientSocket.getInstance();
 
                 if (coloredArea < threshold) {
                     String message = String.format("%s %d %d", Constants.endDrawCommand, xCoord, yCoord);
@@ -58,6 +65,9 @@ class Block extends JPanel {
         addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
+                if (captured) {
+                    return;
+                }
                 if (isDrawing) {
                     draw(e);
                 }
@@ -70,15 +80,11 @@ class Block extends JPanel {
         int y = e.getY();
 
         // Check if drawing is within the bounds
-        if (x < 0)
-            x = 0;
-        if (x >= getWidth())
-            x = getWidth() - 1;
+        if (x < 0 || x >= getWidth())
+            return;
 
-        if (y < 0)
-            y = 0;
-        if (y >= getHeight())
-            y = getHeight() - 1;
+        if (y < 0 || y >= getHeight())
+            return;
 
         // If this is the first pixel being drawn, store its position
         if (lastXValue == -1 || lastYValue == -1) {
@@ -132,5 +138,10 @@ class Block extends JPanel {
     @Override
     public Insets getInsets() {
         return new Insets(0, 0, 0, 0);
+    }
+
+    public void setCaptured(int playerID) {
+        captured = true;
+        setBackground(Constants.playerColors[playerID]);
     }
 }

@@ -72,6 +72,11 @@ public class ClientSocket {
                 // TODO: Change the tile's color to a player's color
                 // A player captures a tile
                 // Tokens are <tile x> <tile y> <player id>
+                int playerID = Integer.parseInt(tokens[3]);
+                int tileX = Integer.parseInt(tokens[1]);
+                int tileY = Integer.parseInt(tokens[2]);
+
+                BlockManager.getInstance().setBlockAsCaptured(tileX, tileY, playerID);
                 break;
             case (Constants.drawError):
                 // TODO: handle the case where the player tries to draw on a tile that is
@@ -116,5 +121,9 @@ public class ClientSocket {
         }
 
         playerID = id;
+    }
+
+    public int getPlayerID() {
+        return Integer.parseInt(playerID);
     }
 }
