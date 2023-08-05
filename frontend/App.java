@@ -26,8 +26,8 @@ public class App {
         JFrame frame = Frame.getInstance().getFrame();
         CursorManager cm = CursorManager.getInstance();
         new Cursor();
-        for (int i = 0; i < 3; i++) {
-            cm.addCursor(new Cursor(i + 1));
+        for (int i = 0; i < 4; i++) {
+            cm.addCursor(new Cursor(i));
         }
 
         frame.add(boardPanel);

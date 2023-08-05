@@ -29,6 +29,7 @@ public class CursorManager {
                 return cursor;
             }
         }
+
         return null;
     }
 
