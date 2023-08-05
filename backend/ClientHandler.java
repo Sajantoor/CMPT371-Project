@@ -76,6 +76,9 @@ class ClientHandler implements Runnable {
             case (Constants.cursorCommand):
                 broadcastMessage(message);
                 break;
+            case (Constants.startCommand):
+                startGame();
+                break;
             default:
                 System.out.println("Unrecognized command: " + commandToken);
                 break;
@@ -169,6 +172,21 @@ class ClientHandler implements Runnable {
         // Unmark the tile as being drawn by the player
         serverBoard.releaseTile(tileX, tileY, playerID);
         broadcastMessage(String.join(" ", tokens));
+    }
+
+    /**
+     * Tells server to not accept any more clients and lets
+     * clients know to start the game
+     */
+    private void startGame() {
+        Server.stopAcceptingClients();
+
+        // message containing the start command and the current player count
+        String message = String.format("%s %d", Constants.startCommand, Server.getPlayerCount());
+
+        // Send that the game is starting all players
+        broadcastMessage(message);
+        sendMessage(message);
     }
 
     /**

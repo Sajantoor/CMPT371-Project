@@ -15,10 +15,21 @@ public class Screens {
         return instance;
     }
 
-    public void createAndShowGUI() {
+    public void start() {
         frame = new JFrame("Deny and Conquer");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setPreferredSize(new Dimension(400, 400));
+
+        StartScreenPanel startScreenPanel = new StartScreenPanel();
+
+        frame.add(startScreenPanel);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+    }
+
+    public void createAndShowGUI() {
+        frame.getContentPane().removeAll();
 
         JPanel boardPanel = new JPanel(new GridLayout(4, 4, 5, 5)) {
             @Override
@@ -30,11 +41,12 @@ public class Screens {
         BlockManager.getInstance().addBlocksToPanel(boardPanel);
 
         Cursor cursor = new Cursor(frame);
-        frame.add(cursor);
 
+        frame.add(cursor);
         frame.add(boardPanel);
+        frame.revalidate(); // Update the frame layout
+        frame.repaint(); // Repaint the frame to reflect the changes
         frame.pack();
-        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 
@@ -42,14 +54,12 @@ public class Screens {
         frame.getContentPane().removeAll();
 
         GameOverPanel gameOverPanel = new GameOverPanel();
-        frame.add(gameOverPanel);
 
+        frame.add(gameOverPanel);
         frame.revalidate(); // Update the frame layout
         frame.repaint(); // Repaint the frame to reflect the changes
-
         frame.pack();
         frame.setVisible(true);
-
     }
 
 }

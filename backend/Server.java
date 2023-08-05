@@ -12,6 +12,7 @@ public class Server {
     private static final int MAX_PLAYERS = 4;
     private static ServerSocket serverSocket = null;
     private static int playerCount = 0;
+    private static boolean gameStarted = false;
     private static List<ClientHandler> clientSockets = new ArrayList<>();
 
     public static void main(String[] args) {
@@ -24,7 +25,7 @@ public class Server {
             System.out.println("Server listening on port " + PORT);
 
             // Accept connections from clients and handle them
-            while (playerCount < MAX_PLAYERS) {
+            while (playerCount < MAX_PLAYERS && !gameStarted) {
                 Socket newSocket = serverSocket.accept();
                 ClientHandler clientHandler = new ClientHandler(newSocket);
                 Server.addClientSocket(clientHandler);
@@ -76,5 +77,9 @@ public class Server {
 
     public synchronized static int getPlayerCount() {
         return playerCount;
+    }
+
+    public static void stopAcceptingClients() {
+        gameStarted = true;
     }
 }

@@ -5,9 +5,10 @@ public class BlockManager {
     private int BOARD_SIZE;
     private Block[][] blocks;
     private int captureCount;
+    private int[] playerScores;
 
     private BlockManager() {
-        BOARD_SIZE = 1;
+        BOARD_SIZE = 2;
         blocks = new Block[BOARD_SIZE][BOARD_SIZE]; // Initialize the 2D array
         captureCount = 0;
     }
@@ -33,9 +34,18 @@ public class BlockManager {
         blocks[x][y].setCaptured(playerID);
         captureCount++;
 
+        playerScores[playerID]++;
+
         if (captureCount == BOARD_SIZE * BOARD_SIZE) {
             Screens.getInstance().endGameScreen();
+            // Print each player's score
+            for (int i = 0; i < playerScores.length; i++) {
+                System.out.println("Player " + i + " score: " + playerScores[i]);
+            }
         }
     }
 
+    public void setPlayers(int playerNum) {
+        playerScores = new int[playerNum];
+    }
 }

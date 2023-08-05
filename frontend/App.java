@@ -8,7 +8,7 @@ public class App {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        SwingUtilities.invokeLater(() -> Screens.getInstance().createAndShowGUI());
+        SwingUtilities.invokeLater(() -> Screens.getInstance().start());
     }
 
 }

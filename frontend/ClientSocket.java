@@ -76,6 +76,10 @@ public class ClientSocket {
                 // TODO: handle the case where the player tries to capture a tile that is
                 // already captured by another player (This case really shouldn't happen)
                 break;
+            case (Constants.startCommand):
+                BlockManager.getInstance().setPlayers(Integer.parseInt(tokens[1]));
+                Screens.getInstance().createAndShowGUI();
+                break;
             case (Constants.playerIDCommand):
                 setPlayerID(tokens[1]);
                 break;
