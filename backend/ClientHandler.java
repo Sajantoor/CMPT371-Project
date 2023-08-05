@@ -76,6 +76,12 @@ class ClientHandler implements Runnable {
             case (Constants.cursorCommand):
                 broadcastMessage(message);
                 break;
+            case(Constants.drawingPixels):
+                broadcastMessage(message);
+                break;
+            case(Constants.clearPixels):
+                broadcastMessage(message);
+                break;
             default:
                 System.out.println("Unrecognized command: " + commandToken);
                 break;

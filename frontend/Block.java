@@ -51,7 +51,7 @@ class Block extends JPanel {
                 setBackground(coloredArea >= threshold ? crayonColor : backgroundColor);
 
                 if (coloredArea < threshold) {
-                    String message = String.format("%s %d %d", Constants.endDrawCommand, xCoord, yCoord);
+                    String message = String.format("%s %d %d", Constants.clearPixels, xCoord, yCoord);
                     socket.send(message);
                     clearLines();
                 } else {
@@ -70,6 +70,8 @@ class Block extends JPanel {
                 }
                 if (isDrawing) {
                     draw(e);
+                    String message = String.format("%s %d %d %d %d", Constants.drawingPixels, xCoord, yCoord, e.getX(), e.getY());
+                    socket.send(message);
                 }
             }
         });
@@ -109,7 +111,7 @@ class Block extends JPanel {
         lastYValue = y;
     }
 
-    private void clearLines() {
+    public void clearLines() {
         // Reset the colored area and the stored drawn points
         coloredArea = 0;
         drawnPointsInBox.clear();
@@ -143,5 +145,25 @@ class Block extends JPanel {
     public void setCaptured(int playerID) {
         captured = true;
         setBackground(Constants.playerColors[playerID]);
+    }
+
+    public void draw_pixel(int x, int y, int playerID) {
+        System.out.println("Drawing pixel at " + x + " " + y);
+        if (captured) {
+            return;
+        }
+
+        // clear lines if less then threashold
+        if (coloredArea < 0.25 * totalBoxArea) {
+            clearLines();
+        }
+
+        // Add the point to the list of drawn points and repaint the panel
+        drawnPointsInBox.add(new Point(x, y));
+        repaint();
+    }
+
+    public void clearPixels() {
+        clearLines();
     }
 }

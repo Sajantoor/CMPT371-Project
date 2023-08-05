@@ -72,6 +72,25 @@ public class ClientSocket {
                 // TODO: handle the case where the player tries to draw on a tile that is
                 // already being drawn on by another player (This is a likely case)
                 break;
+            case (Constants.drawingPixels):
+                System.out.println("Drawing pixels");
+                System.out.println(message);
+                int tilePositionX = Integer.parseInt(tokens[1]);
+                int tilePositionY = Integer.parseInt(tokens[2]);
+                int x = Integer.parseInt(tokens[3]);
+                int y = Integer.parseInt(tokens[4]);
+                playerID = Integer.parseInt(tokens[5]);
+
+                BlockManager.getInstance().setBlockAsDrawing(tilePositionX, tilePositionY, x, y, playerID);
+                break;
+            case (Constants.clearPixels):
+                System.out.println("Clearing pixels");
+                System.out.println(message);
+                tilePositionX = Integer.parseInt(tokens[1]);
+                tilePositionY = Integer.parseInt(tokens[2]);
+
+                BlockManager.getInstance().clearBlock(tilePositionX, tilePositionY);
+                break;
             case (Constants.captureError):
                 // TODO: handle the case where the player tries to capture a tile that is
                 // already captured by another player (This case really shouldn't happen)

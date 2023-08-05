@@ -11,6 +11,8 @@ public class Constants {
     public static final String drawError = "drawError";
     public static final String captureError = "captureError";
     public static final String startCommand = "start";
+    public static final String drawingPixels = "drawingPixels";
+    public static final String clearPixels = "clearPixels";
 
     // Server
     public static final String serverIP = "localhost";
