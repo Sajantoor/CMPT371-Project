@@ -139,7 +139,7 @@ class Block extends JPanel {
         setBackground(Constants.playerColors[playerID]);
     }
 
-    public void draw_pixel(int x, int y, int playerID) {
+    public void drawPixel(int x, int y, int playerID) {
         if (captured) {
             return;
         }
