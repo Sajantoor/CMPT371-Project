@@ -129,6 +129,12 @@ public class ClientSocket {
             throw new RuntimeException("Player ID already set");
         }
 
+        int intPlayerID = Integer.parseInt(id);
+
+        if (intPlayerID == -1) {
+            System.exit(1);
+        }
+
         playerID = id;
     }
 
