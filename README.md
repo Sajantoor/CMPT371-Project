@@ -205,7 +205,6 @@ Explanation:
 
 2. handleMessage(String message): This method is responsible for processing the messages received from the client. It splits the message into tokens and checks the command token (first token) to determine the action to be taken. Based on the command token, different methods like handleCapture(), handleStartDraw(), and handleEndDraw() are called to update the shared object (game board) accordingly.
 
-Please note that the provided code snippets are part of a larger codebase, and additional methods and functionalities might exist in the actual implementation. The code focuses on managing client connections, sending and receiving messages, and updating the shared object (game board) based on the messages received from the clients.
 
 
 
