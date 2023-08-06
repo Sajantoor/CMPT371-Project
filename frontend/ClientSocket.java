@@ -50,10 +50,7 @@ public class ClientSocket {
                 handleDrawing(tokens);
                 break;
             case (Constants.endDrawCommand):
-                tilePositionX = Integer.parseInt(tokens[1]);
-                tilePositionY = Integer.parseInt(tokens[2]);
-
-                BlockManager.getInstance().clearBlock(tilePositionX, tilePositionY);
+                handleEndDraw(tokens);
                 break;
             case (Constants.endCommand):
                 // Get each players score from the server
@@ -65,14 +62,7 @@ public class ClientSocket {
                 Screens.getInstance().endGameScreen(playerScores);
                 break;
             case (Constants.captureCommand):
-                // TODO: Change the tile's color to a player's color
-                // A player captures a tile
-                // Tokens are <tile x> <tile y> <player id>
-                int userPlayerID = Integer.parseInt(tokens[3]);
-                int tileX = Integer.parseInt(tokens[1]);
-                int tileY = Integer.parseInt(tokens[2]);
-
-                BlockManager.getInstance().setBlockAsCaptured(tileX, tileY, userPlayerID);
+                handleCapture(tokens);
                 break;
             case (Constants.drawError):
                 // TODO: handle the case where the player tries to draw on a tile that is
@@ -102,6 +92,28 @@ public class ClientSocket {
         int playerID = Integer.parseInt(tokens[5]);
 
         BlockManager.getInstance().setBlockAsDrawing(this.tilePositionX, tilePositionY, x, y, playerID);
+        // hide the cursor when drawing
+        CursorManager.getInstance().getCursor(playerID).hide();
+    }
+
+    private void handleEndDraw(String[] tokens) {
+        tilePositionX = Integer.parseInt(tokens[1]);
+        tilePositionY = Integer.parseInt(tokens[2]);
+        int playerID = Integer.parseInt(tokens[3]);
+
+        BlockManager.getInstance().clearBlock(tilePositionX, tilePositionY);
+        CursorManager.getInstance().getCursor(playerID).show();
+
+    }
+
+    private void handleCapture(String[] tokens) {
+        int userPlayerID = Integer.parseInt(tokens[3]);
+        int tileX = Integer.parseInt(tokens[1]);
+        int tileY = Integer.parseInt(tokens[2]);
+        int playerID = Integer.parseInt(tokens[3]);
+
+        BlockManager.getInstance().setBlockAsCaptured(tileX, tileY, userPlayerID);
+        CursorManager.getInstance().getCursor(playerID).show();
     }
 
     private void recieveMessages() {
