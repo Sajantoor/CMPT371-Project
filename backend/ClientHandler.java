@@ -227,6 +227,12 @@ class ClientHandler implements Runnable {
         }
 
         broadcastMessageToAll(message);
+
+        try {
+            Server.clear();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to clear:" + e);
+        }
     }
 
     /**

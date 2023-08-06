@@ -11,7 +11,6 @@ import java.util.TimerTask;
 
 public class Server {
     private static final int PORT = 3000;
-    private static final int MAX_PLAYERS = 4;
     private static ServerSocket serverSocket = null;
     private static int playerCount = 0;
     private static boolean gameStarted = false;
@@ -49,9 +48,6 @@ public class Server {
                 }
             }
         }
-
-        // TODO: Clear the connections after server is closed
-
     }
 
     public static void clear() throws IOException {
