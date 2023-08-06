@@ -32,6 +32,73 @@ When a player makes a move, the server verifies if the box they selected can be 
 **include opening sockets snippets**
 **handling of shared object**
 
+Opening Sockets:
+
+The opening of sockets happens in the `connect()` method. Here's the code snippet:
+
+
+public void connect() throws IOException {
+    socket = new Socket(Constants.serverIP, Constants.serverPort);
+    out = new PrintWriter(socket.getOutputStream(), true);
+    in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+    this.recieveMessages();
+}
+
+
+Explanation:
+1. socket = new Socket(Constants.serverIP, Constants.serverPort);`: This line creates a new socket by specifying the server's IP address (`Constants.serverIP`) and the server's port number (`Constants.serverPort`).
+
+2. out = new PrintWriter(socket.getOutputStream(), true);: This line creates a PrintWriter object (`out`) to write data to the server using the socket's output stream.
+
+3. in = new BufferedReader(new InputStreamReader(socket.getInputStream()));: This line creates a BufferedReader object (`in`) to read data from the server using the socket's input stream.
+
+4. this.recieveMessages();: This line starts the background thread to receive messages from the server continuously.
+
+
+
+
+Handling the Shared Object:
+
+case (Constants.startDrawCommand):
+    handleDrawing(tokens);
+    break;
+case (Constants.endDrawCommand):
+    tilePositionX = Integer.parseInt(tokens[1]);
+    tilePositionY = Integer.parseInt(tokens[2]);
+
+    BlockManager.getInstance().clearBlock(tilePositionX, tilePositionY);
+    break;
+case (Constants.captureCommand):
+    // TODO: Change the tile's color to a player's color
+    // A player captures a tile
+    // Tokens are <tile x> <tile y> <player id>
+    int playerID = Integer.parseInt(tokens[3]);
+    int tileX = Integer.parseInt(tokens[1]);
+    int tileY = Integer.parseInt(tokens[2]);
+
+    BlockManager.getInstance().setBlockAsCaptured(tileX, tileY, playerID);
+    break;
+
+private void handleDrawing(String[] tokens) {
+        tilePositionX = Integer.parseInt(tokens[1]);
+        tilePositionY = Integer.parseInt(tokens[2]);
+        int x = Integer.parseInt(tokens[3]);
+        int y = Integer.parseInt(tokens[4]);
+        int playerID = Integer.parseInt(tokens[5]);
+
+        BlockManager.getInstance().setBlockAsDrawing(this.tilePositionX, tilePositionY, x, y, playerID);
+    }
+
+Explanation:
+1. Handling Drawing: When the server sends a message with Constants.startDrawCommand, the handleDrawing(tokens) method is called. This method processes the message and updates the state of the shared object by invoking setBlockAsDrawing().
+
+2.Handling Ending Drawing: When the server sends a message with Constants.endDrawCommand, the BlockManager is updated by calling clearBlock() to clear the drawing on a specific tile.
+
+3. Handling Capturing: When the server sends a message with Constants.captureCommand, the `BlockManager` is updated by calling setBlockAsCaptured() to indicate that a player has captured a specific tile.
+
+In summary, the BlockManager class seems to be the shared object responsible for managing the state of tiles and drawing/capturing actions performed by players. It's accessed within the handleMessage() method, where the state of the tiles is updated based on the commands received from the server.
+
+
 # Group Members
 
 Arjun Singh - 20%
