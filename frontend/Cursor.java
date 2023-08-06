@@ -9,7 +9,6 @@ import java.net.URL;
 
 class Cursor extends JComponent {
     private JFrame frame;
-    private Color color = Color.BLUE;
     private BufferedImage cursorImage;
     private JLabel cursorLabel;
     private int cursorX = 0;
@@ -19,7 +18,7 @@ class Cursor extends JComponent {
     public Cursor() {
         this.frame = Screens.getInstance().getFrame();
 
-        cursorImage = loadCursorImage(color);
+        cursorImage = loadCursorImage();
 
         java.awt.Cursor customCursor = Toolkit.getDefaultToolkit().createCustomCursor(
                 cursorImage,
@@ -53,7 +52,7 @@ class Cursor extends JComponent {
         this.playerID = playerID;
 
         // Load the cursor image
-        cursorImage = loadCursorImage(Constants.playerColors[playerID]);
+        cursorImage = loadCursorImage();
         cursorLabel = new JLabel(new ImageIcon(cursorImage));
 
         // add the cursor image to the frame and set the cursor to the center of the
@@ -101,20 +100,20 @@ class Cursor extends JComponent {
             String crayonColorName = Constants.ColorNames[ClientSocket.getInstance().getPlayerID()];
             String crayonImageName = String.format("crayon_%s.png", crayonColorName);
             URL imageURL = App.class.getResource("assets/" + crayonImageName);
-    
+
             // Import the crayon image
             BufferedImage image = ImageIO.read(imageURL);
-    
+
             // Create a new BufferedImage with the same dimensions as the original image
             BufferedImage buffImage = new BufferedImage(image.getWidth(), image.getHeight(),
                     BufferedImage.TYPE_INT_ARGB);
             Graphics2D g = buffImage.createGraphics();
-    
+
             g.drawImage(image, 0, 0, null);
-    
+
             // Dispose of the Graphics object
             g.dispose();
-    
+
             return buffImage;
         } catch (IOException e) {
             throw new RuntimeException(e);
