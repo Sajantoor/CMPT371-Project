@@ -32,6 +32,7 @@ When a player makes a move, the server verifies if the box they selected can be 
 **include opening sockets snippets**
 **handling of shared object**
 
+ClientSocket.java
 Opening Sockets:
 
 The opening of sockets happens in the connect() method. Here's the code snippet:
@@ -97,6 +98,115 @@ Explanation:
 2.Handling Ending Drawing: When the server sends a message with Constants.endDrawCommand, the BlockManager is updated by calling clearBlock() to clear the drawing on a specific tile.
 
 3.Handling Capturing: When the server sends a message with Constants.captureCommand, the BlockManager is updated by calling setBlockAsCaptured() to indicate that a player has captured a specific tile.
+
+ClientHandler.java
+
+Opening Sockets:
+The opening of sockets happens when a client connects to the server. The constructor of the `ClientHandler` class is responsible for this. Here's the code snippet:
+
+```java
+public class ClientHandler implements Runnable {
+    private Socket clientSocket;
+    private PrintWriter out;
+    private BufferedReader in;
+    private int playerID;
+    private boolean isClientConnected;
+
+    public ClientHandler(Socket clientSocket) {
+        this.clientSocket = clientSocket;
+        this.isClientConnected = true;
+
+        playerID = findAvailablePlayerID();
+        if (playerID != -1) {
+            Server.players[playerID] = 1;
+        }
+    }
+    // ...
+}
+```
+
+Explanation:
+1. `Socket clientSocket: The constructor receives the client's socket as a parameter and assigns it to the clientSocket member variable.
+
+2. isClientConnected: A boolean variable to keep track of whether the client is connected or not. It is initially set to true.
+
+3. findAvailablePlayerID(): A method that finds an available player ID to assign to the client. If a player ID is available, it assigns the ID to the playerID member variable. The player ID is used to track which tiles are captured by which players.
+
+4. Server.players[playerID] = 1;: The Server.players array keeps track of which player is capturing a specific tile. When a client connects, the server marks the corresponding player index as "1" in the players array, indicating that the player is active and has connected to the game.
+
+**Handling the Shared Object:**
+The shared object in this context likely refers to the canvas or the game board, which is updated when clients draw or capture tiles. Here are the relevant code snippets for handling the shared object:
+
+```
+@Override
+public void run() {
+    try {
+        // ...
+        OutputStream os = clientSocket.getOutputStream();
+        InputStream is = clientSocket.getInputStream();
+        out = new PrintWriter(os, true);
+        in = new BufferedReader(new InputStreamReader(is));
+
+        // Send playerID to the client when connecting
+        String sendPlayerID = "playerID " + (Server.getPlayerCount() - 1);
+        sendMessage(sendPlayerID);
+
+        String message;
+
+        while (Server.isPlayersLeft()) {
+            message = in.readLine();
+            handleMessage(message);
+        }
+
+        // Remove the client socket from the list of active client sockets upon
+        // disconnection
+        clientSocket.close();
+        Server.players[playerID] = 0;
+        Server.removeClientSocket(this); 
+    } catch (IOException e) {
+        System.err.println("Error handling client: " + e.getMessage());
+        isClientConnected = false;
+    }
+}
+
+private void handleMessage(String message) {
+    if (message == null) {
+        return;
+    }
+
+    String[] tokens = message.split(" ");
+
+    if (tokens.length == 0) {
+        return;
+    }
+
+    System.out.println("Received message: " + message);
+
+    String commandToken = tokens[0];
+
+    switch (commandToken) {
+        case (Constants.captureCommand):
+            handleCapture(tokens);
+            break;
+        case (Constants.startDrawCommand):
+            handleStartDraw(tokens);
+            break;
+        case (Constants.endDrawCommand):
+            handleEndDraw(tokens);
+            break;
+        // Add more cases for other message types if needed
+        // ...
+    }
+}
+```
+
+Explanation:
+1. run(): This method is the entry point for the client handling thread. It sets up the input and output streams to communicate with the client and sends the playerID to the client upon connection. Then, it enters a loop to continuously listen for messages from the client and calls handleMessage(message) to process each received message.
+
+2. handleMessage(String message): This method is responsible for processing the messages received from the client. It splits the message into tokens and checks the command token (first token) to determine the action to be taken. Based on the command token, different methods like handleCapture(), handleStartDraw(), and handleEndDraw() are called to update the shared object (game board) accordingly.
+
+Please note that the provided code snippets are part of a larger codebase, and additional methods and functionalities might exist in the actual implementation. The code focuses on managing client connections, sending and receiving messages, and updating the shared object (game board) based on the messages received from the clients.
+
 
 
 
