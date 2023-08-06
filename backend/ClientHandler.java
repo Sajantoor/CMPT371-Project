@@ -10,12 +10,18 @@ class ClientHandler implements Runnable {
     private Socket clientSocket;
     private PrintWriter out;
     private BufferedReader in;
+    private int playerID;
     // status variable of each thread
     private boolean isClientConnected;
 
     public ClientHandler(Socket clientSocket) {
         this.clientSocket = clientSocket;
         this.isClientConnected = true;
+
+        playerID = findAvailablePlayerID();
+        if (playerID != -1) {
+            Server.players[playerID] = 1;
+        }
     }
 
     private Socket getSocket() {
@@ -48,8 +54,9 @@ class ClientHandler implements Runnable {
 
             // Remove the client socket from the list of active client sockets upon
             // disconnection
-            Server.removeClientSocket(this);
             clientSocket.close();
+            Server.players[playerID] = 0;
+            Server.removeClientSocket(this); 
         } catch (IOException e) {
             System.err.println("Error handling client: " + e.getMessage());
             isClientConnected = false;
@@ -227,5 +234,11 @@ class ClientHandler implements Runnable {
      */
     private void sendMessage(String message) {
         out.println(message);
+    }
+    private int findAvailablePlayerID() {
+        for (int i = 0; i < Server.players.length; i++) {
+            if (Server.players[i] == 0) return i;
+        }
+        return -1; // No available slots
     }
 }

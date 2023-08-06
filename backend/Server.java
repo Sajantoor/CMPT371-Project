@@ -16,6 +16,8 @@ public class Server {
     private static int playerCount = 0;
     private static boolean gameStarted = false;
     private static List<ClientHandler> clientSockets = new ArrayList<>();
+    public static int[] players = {0, 0, 0, 0};
+
 
     public static void main(String[] args) throws IOException {
         serverSocket = null;
@@ -27,14 +29,25 @@ public class Server {
             // Accept connections from clients and handle them
             startFaultTolerance();
 
-            while (playerCount < MAX_PLAYERS && !gameStarted) {
-                Socket newSocket = serverSocket.accept();
-                ClientHandler clientHandler = new ClientHandler(newSocket);
-                Server.addClientSocket(clientHandler);
+            // In Server.java, inside the main method
+            while (playerCount < MAX_PLAYERS) {
+                if (getAvailablePlayerID() != -1) { // Check if there is an available slot
+                    Socket newSocket = serverSocket.accept();
+                    ClientHandler clientHandler = new ClientHandler(newSocket);
+                    Server.addClientSocket(clientHandler);
 
-                // threads for the server to handle multiple clients simultaneously.
-                new Thread(clientHandler).start();
+                    // Threads for the server to handle multiple clients simultaneously.
+                    new Thread(clientHandler).start();
+                } else {
+                    // Optionally, add a short sleep here to prevent the loop from consuming too much CPU
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
+
         } catch (IOException e) {
             if (playerCount > MAX_PLAYERS) {
                 throw new RuntimeException("The number of target connections cannot exceed  " + MAX_PLAYERS);
@@ -125,4 +138,11 @@ public class Server {
     public static void stopAcceptingClients() {
         gameStarted = true;
     }
+    private static int getAvailablePlayerID() {
+        for (int i = 0; i < players.length; i++) {
+            if (players[i] == 0) return i;
+        }
+        return -1; // No available slots
+    }
+    
 }
