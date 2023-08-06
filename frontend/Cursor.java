@@ -32,8 +32,6 @@ class Cursor extends JComponent {
         // Add event listeners for mouse movement
         this.frame.addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseMoved(MouseEvent e) {
-                // convert mouse coordinates to relative x and y coordinates
-
                 // get mouse location relative to the frame
                 int x = e.getX();
                 int y = e.getY();
@@ -89,6 +87,12 @@ class Cursor extends JComponent {
         return cursorImage.getHeight() / 2 + 5;
     }
 
+    /**
+     * Move the cursor to the specified location
+     * 
+     * @param x
+     * @param y
+     */
     public void move(double x, double y) {
         // This is some hacky shit to get the cursor to appear in the right spot...
         this.cursorX = (int) (x * frame.getWidth()) - 10;

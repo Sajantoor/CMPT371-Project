@@ -71,6 +71,11 @@ class Block extends JPanel {
         });
     }
 
+    /**
+     * Draw lines on the block
+     * 
+     * @param e The mouse event
+     */
     private void draw(MouseEvent e) {
         int x = e.getX();
         int y = e.getY();
@@ -105,6 +110,9 @@ class Block extends JPanel {
         lastYValue = y;
     }
 
+    /**
+     * Clear the lines drawn on the block
+     */
     public void clearLines() {
         if (!captured) {
             // Reset the colored area and the stored drawn points
@@ -143,6 +151,13 @@ class Block extends JPanel {
         setBackground(Constants.playerColors[playerID]);
     }
 
+    /**
+     * Draw a pixel on the block with the given coordinates and player ID
+     * 
+     * @param x
+     * @param y
+     * @param playerID
+     */
     public void drawPixel(int x, int y, int playerID) {
         if (captured) {
             return;

@@ -17,7 +17,7 @@ public class Server {
     private static List<ClientHandler> clientSockets = new ArrayList<>();
     // Used to find the next avaliable player slot
     // 0 if avaliable, 1 if taken
-    private static int[] players = { 0, 0, 0, 0 };
+    private static int[] playerAvaliability = { 0, 0, 0, 0 };
 
     public static void main(String[] args) throws IOException {
         serverSocket = null;
@@ -50,6 +50,11 @@ public class Server {
         }
     }
 
+    /**
+     * Clear the server of all existing connections and close the server socket.
+     * 
+     * @throws IOException
+     */
     public static void clear() throws IOException {
         if (!serverSocket.isClosed()) {
             serverSocket.close();
@@ -63,27 +68,29 @@ public class Server {
         System.out.println("Server cleared. All existing connections terminated.");
     }
 
+    /**
+     * Start the fault tolerance for the server. This includes a heartbeat timer
+     * that checks the status of each client every 5 seconds to see if they're still
+     * running.
+     */
     private static void startFaultTolerance() {
-        // Start the heartbeat timer
         Timer heartbeatTimer = new Timer();
-        // check the status of each client every 5 seconds to see if they're still
-        // running
-        heartbeatTimer.schedule(new HeartbeatTask(), 0, 5000); // Every 5 seconds
+        heartbeatTimer.schedule(new HeartbeatTask(), 0, 5000);
 
-        // Run a shutdown hook to stop the fault tolerance on program exit
         Runtime.getRuntime().addShutdownHook(new Thread(() -> { // allows program to shut down gracefully after
                                                                 // termination
             heartbeatTimer.cancel();
         }));
     }
 
+    /**
+     * Timer task that runs every 5 seconds to check the status of each client.
+     * Removes the client from the list of active client sockets if they are not
+     * responsive.
+     */
     private static class HeartbeatTask extends TimerTask {
         @Override
         public void run() {
-            // run whenever a client is not responsive in its 5 second ping
-            // synchronized block to prevent concurrent modification of the list of client
-            // sockets
-
             // Add list to avoid concurrent modification exception
             List<ClientHandler> clientHandlersToRemove = new ArrayList<>();
 
@@ -94,6 +101,7 @@ public class Server {
                 }
             }
 
+            // Remove all clients that are not responding
             for (ClientHandler clientHandler : clientHandlersToRemove) {
                 removeClientSocket(clientHandler);
             }
@@ -105,6 +113,12 @@ public class Server {
         playerCount++;
     }
 
+    /**
+     * Remove a client socket from the list of active client sockets. Close the
+     * socket and mark the player ID as avaliable.
+     * 
+     * @param socket Client socket to remove
+     */
     public synchronized static void removeClientSocket(ClientHandler socket) {
         try {
             socket.getSocket().close();
@@ -115,7 +129,7 @@ public class Server {
         int playerID = socket.getPLayerID();
         // Mark player ID as avaliable
         if (playerID != -1) {
-            players[playerID] = 0;
+            playerAvaliability[playerID] = 0;
             System.out.println("Player " + playerID + " has left the game.");
 
         }
@@ -141,10 +155,15 @@ public class Server {
         gameStarted = true;
     }
 
+    /**
+     * Find the next avaliable player slot.
+     * 
+     * @return
+     */
     public synchronized static int getAvaliablePlayer() {
-        for (int i = 0; i < players.length; i++) {
-            if (players[i] == 0) {
-                players[i] = 1;
+        for (int i = 0; i < playerAvaliability.length; i++) {
+            if (playerAvaliability[i] == 0) {
+                playerAvaliability[i] = 1;
                 System.out.println("Found avaliable player slot: " + i + ".");
                 return i;
             }
