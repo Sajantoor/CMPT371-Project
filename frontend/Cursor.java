@@ -96,23 +96,25 @@ class Cursor extends JComponent {
     }
 
     // Get cursor image
-    private static BufferedImage loadCursorImage(Color crayonColor) {
+    private static BufferedImage loadCursorImage() {
         try {
-            // import the crayon image
-            URL imageURL = App.class.getResource("assets/crayon_32px.png");
+            String crayonColorName = Constants.ColorNames[ClientSocket.getInstance().getPlayerID()];
+            String crayonImageName = String.format("crayon_%s.png", crayonColorName);
+            URL imageURL = App.class.getResource("assets/" + crayonImageName);
+    
+            // Import the crayon image
             BufferedImage image = ImageIO.read(imageURL);
-
+    
             // Create a new BufferedImage with the same dimensions as the original image
             BufferedImage buffImage = new BufferedImage(image.getWidth(), image.getHeight(),
                     BufferedImage.TYPE_INT_ARGB);
             Graphics2D g = buffImage.createGraphics();
-
-            g.setColor(crayonColor);
+    
             g.drawImage(image, 0, 0, null);
-
+    
             // Dispose of the Graphics object
             g.dispose();
-
+    
             return buffImage;
         } catch (IOException e) {
             throw new RuntimeException(e);

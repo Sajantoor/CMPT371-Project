@@ -24,4 +24,5 @@ public class Constants {
     // Player colors
     public static final String[] playerColorsStrings = { "Blue", "Red", "Green", "Yellow" };
     public static final Color[] playerColors = { Color.BLUE, Color.RED, Color.GREEN, Color.YELLOW };
+    public static final String[] ColorNames = { "blue", "red", "green", "yellow" };
 }

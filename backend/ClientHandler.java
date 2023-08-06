@@ -116,7 +116,7 @@ class ClientHandler implements Runnable {
      */
     private void handleStartDraw(String[] tokens) {
         // Tokens are <tile x> <tile y> <player id>
-        int playerID = Integer.parseInt(tokens[3]);
+        int playerID = Integer.parseInt(tokens[6]);
         int tileX = Integer.parseInt(tokens[1]);
         int tileY = Integer.parseInt(tokens[2]);
 
