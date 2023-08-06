@@ -6,13 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 class Block extends JPanel {
-    private int xCoord; // x coordinate of the block
-    private int yCoord; // y coordinate of the block
     private boolean isDrawing = false;
     private boolean captured = false;
     private ClientSocket socket = ClientSocket.getInstance();
     private Color crayonColor = Constants.playerColors[socket.getPlayerID()];
-    private static Color backgroundColor = Color.WHITE;
     private int totalBoxArea = 0;
     private int coloredArea = 0;
     private int lastXValue = -1;
@@ -20,8 +17,6 @@ class Block extends JPanel {
     private List<Point> drawnPointsInBox = new ArrayList<>();
 
     Block(int xCoord, int yCoord) {
-        this.xCoord = xCoord;
-        this.yCoord = yCoord;
         setPreferredSize(new Dimension(80, 80));
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
@@ -32,12 +27,9 @@ class Block extends JPanel {
                     return;
                 }
                 isDrawing = true;
+                crayonColor = Constants.playerColors[socket.getPlayerID()];
                 totalBoxArea = getWidth() * getHeight();
                 draw(e);
-
-                // Send the draw command to the server
-                String message = String.format("%s %d %d", Constants.startDrawCommand, xCoord, yCoord);
-                socket.send(message);
             }
 
             @Override
@@ -47,8 +39,9 @@ class Block extends JPanel {
                 }
                 isDrawing = false;
                 double threshold = 0.25 * totalBoxArea;
-
-                setBackground(coloredArea >= threshold ? crayonColor : backgroundColor);
+                if(coloredArea >= threshold){
+                    setBackground(crayonColor);
+                }
 
                 if (coloredArea < threshold) {
                     String message = String.format("%s %d %d", Constants.endDrawCommand, xCoord, yCoord);
@@ -70,6 +63,8 @@ class Block extends JPanel {
                 }
                 if (isDrawing) {
                     draw(e);
+                    String message = String.format("%s %d %d %d %d %d", Constants.startDrawCommand, xCoord, yCoord, e.getX(), e.getY(), socket.getPlayerID());
+                    socket.send(message);
                 }
             }
         });
@@ -109,15 +104,17 @@ class Block extends JPanel {
         lastYValue = y;
     }
 
-    private void clearLines() {
-        // Reset the colored area and the stored drawn points
-        coloredArea = 0;
-        drawnPointsInBox.clear();
-        lastXValue = -1;
-        lastYValue = -1;
-
-        // Repaint the panel
-        repaint();
+    public void clearLines() {
+        if (!captured) {
+            // Reset the colored area and the stored drawn points
+            coloredArea = 0;
+            drawnPointsInBox.clear();
+            captured = false;
+            lastXValue = -1;
+            lastYValue = -1;
+            // Repaint the panel
+            repaint();
+        }
     }
 
     @Override
@@ -143,5 +140,16 @@ class Block extends JPanel {
     public void setCaptured(int playerID) {
         captured = true;
         setBackground(Constants.playerColors[playerID]);
+    }
+
+    public void drawPixel(int x, int y, int playerID) {
+        if (captured) {
+            return;
+        }
+        isDrawing = true;
+        crayonColor = Constants.playerColors[playerID];
+        // Add the point to the list of drawn points and repaint the panel
+        drawnPointsInBox.add(new Point(x, y));
+        repaint();
     }
 }

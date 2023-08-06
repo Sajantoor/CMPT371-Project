@@ -83,6 +83,9 @@ class ClientHandler implements Runnable {
             case (Constants.cursorCommand):
                 broadcastMessage(message);
                 break;
+            case (Constants.startCommand):
+                startGame();
+                break;
             default:
                 System.out.println("Unrecognized command: " + commandToken);
                 break;
@@ -94,6 +97,15 @@ class ClientHandler implements Runnable {
             if (socket != this && socket.getSocket().isConnected()) {
                 socket.sendMessage(message);
             }
+        }
+    }
+
+    private void broadcastMessageToAll(String message) {
+        for (ClientHandler socket : Server.getClientSockets()) {
+            if (socket != this && socket.getSocket().isConnected()) {
+                socket.sendMessage(message);
+            }
+            out.println(message);
         }
     }
 
@@ -111,7 +123,7 @@ class ClientHandler implements Runnable {
      */
     private void handleStartDraw(String[] tokens) {
         // Tokens are <tile x> <tile y> <player id>
-        int playerID = Integer.parseInt(tokens[3]);
+        int playerID = Integer.parseInt(tokens[6]);
         int tileX = Integer.parseInt(tokens[1]);
         int tileY = Integer.parseInt(tokens[2]);
 
@@ -149,6 +161,10 @@ class ClientHandler implements Runnable {
         if (ServerBoard.getInstance().attemptCaptureTile(tileX, tileY, playerID)) {
             // Take the tile and mark it as captured by the player
             broadcastMessage(String.join(" ", tokens));
+
+            if (ServerBoard.getInstance().allTilesCaptured()) {
+                endGame();
+            }
             return;
         } else {
             // the tile is being captured or captured by another player, so don't capture
@@ -174,6 +190,33 @@ class ClientHandler implements Runnable {
         // Unmark the tile as being drawn by the player
         serverBoard.releaseTile(tileX, tileY, playerID);
         broadcastMessage(String.join(" ", tokens));
+    }
+
+    /**
+     * Tells server to not accept any more clients and lets
+     * clients know to start the game
+     */
+    private void startGame() {
+        Server.stopAcceptingClients();
+
+        // message containing the start command and the current player count
+        String message = String.format("%s %d", Constants.startCommand, Server.getPlayerCount());
+
+        // Send that the game is starting all players
+        broadcastMessage(message);
+    }
+
+    public void endGame() {
+        int[] playerScores = ServerBoard.getInstance().getPlayerScores();
+
+        String message = Constants.endCommand + " ";
+
+        // Send each players score back
+        for (int i = 0; i < playerScores.length; i++) {
+            message += playerScores[i] + " ";
+        }
+
+        broadcastMessageToAll(message);
     }
 
     /**

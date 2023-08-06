@@ -14,13 +14,12 @@ public class Server {
     private static final int MAX_PLAYERS = 4;
     private static ServerSocket serverSocket = null;
     private static int playerCount = 0;
+    private static boolean gameStarted = false;
     private static List<ClientHandler> clientSockets = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
         serverSocket = null;
         try {
-            // Initialize the game board and players (same as previous code)
-
             // Create the server socket
             serverSocket = new ServerSocket(PORT);
             System.out.println("Server listening on port " + PORT);
@@ -28,7 +27,7 @@ public class Server {
             // Accept connections from clients and handle them
             startFaultTolerance();
 
-            while (playerCount < MAX_PLAYERS) {
+            while (playerCount < MAX_PLAYERS && !gameStarted) {
                 Socket newSocket = serverSocket.accept();
                 ClientHandler clientHandler = new ClientHandler(newSocket);
                 Server.addClientSocket(clientHandler);
@@ -56,6 +55,7 @@ public class Server {
         if (!serverSocket.isClosed()) {
             serverSocket.close();
         }
+
         for (ClientHandler clientHandler : clientSockets) {
             removeClientSocket(clientHandler);
         }
@@ -64,7 +64,6 @@ public class Server {
     }
 
     private static void startFaultTolerance() {
-        System.out.println("Starting fault tolerance...");
         // Start the heartbeat timer
         Timer heartbeatTimer = new Timer();
         // check the status of each client every 5 seconds to see if they're still
@@ -121,5 +120,9 @@ public class Server {
 
     public synchronized static int getPlayerCount() {
         return playerCount;
+    }
+
+    public static void stopAcceptingClients() {
+        gameStarted = true;
     }
 }

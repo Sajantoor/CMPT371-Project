@@ -8,6 +8,8 @@ public class ClientSocket {
     private BufferedReader in;
     private boolean isClosed = false;
     private String playerID = null;
+    private int tilePositionX = 0;
+    private int tilePositionY = 0;
 
     private ClientSocket() {
     }
@@ -36,37 +38,41 @@ public class ClientSocket {
             return;
         }
 
-        System.out.println("Message from server: " + message);
-
         String[] tokens = message.split(" ");
         String commandToken = tokens[0];
 
         switch (commandToken) {
             case (Constants.cursorCommand):
-                // TODO: Call the appropriate cursor's move method here
                 // Tokens are <x position> <y position> <player id>
+                handleCursorCommand(tokens);
                 break;
             case (Constants.startDrawCommand):
-                // TODO: Call the appropriate draw method here for this user
-                // Tokens are <tile x> <tile y> <player id>
+                handleDrawing(tokens);
                 break;
             case (Constants.endDrawCommand):
-                // TODO: Call the appropriate draw method here for this user
-                // Tokens are <tile x> <tile y> <player id>
+                tilePositionX = Integer.parseInt(tokens[1]);
+                tilePositionY = Integer.parseInt(tokens[2]);
+
+                BlockManager.getInstance().clearBlock(tilePositionX, tilePositionY);
                 break;
             case (Constants.endCommand):
-                // TOOD: Call the appropriate game over method here
-                // Game over
+                // Get each players score from the server
+                String[] playerScores = new String[tokens.length - 1];
+                for (int i = 0; i < playerScores.length; i++) {
+                    playerScores[i] = tokens[i + 1];
+                }
+
+                Screens.getInstance().endGameScreen(playerScores);
                 break;
             case (Constants.captureCommand):
                 // TODO: Change the tile's color to a player's color
                 // A player captures a tile
                 // Tokens are <tile x> <tile y> <player id>
-                int playerID = Integer.parseInt(tokens[3]);
+                int userPlayerID = Integer.parseInt(tokens[3]);
                 int tileX = Integer.parseInt(tokens[1]);
                 int tileY = Integer.parseInt(tokens[2]);
 
-                BlockManager.getInstance().setBlockAsCaptured(tileX, tileY, playerID);
+                BlockManager.getInstance().setBlockAsCaptured(tileX, tileY, userPlayerID);
                 break;
             case (Constants.drawError):
                 // TODO: handle the case where the player tries to draw on a tile that is
@@ -76,6 +82,9 @@ public class ClientSocket {
                 // TODO: handle the case where the player tries to capture a tile that is
                 // already captured by another player (This case really shouldn't happen)
                 break;
+            case (Constants.startCommand):
+                Screens.getInstance().createAndShowGUI();
+                break;
             case (Constants.playerIDCommand):
                 setPlayerID(tokens[1]);
                 break;
@@ -83,6 +92,16 @@ public class ClientSocket {
                 System.out.println("Unrecognized command from frontend: " + commandToken);
                 break;
         }
+    }
+
+    private void handleDrawing(String[] tokens) {
+        tilePositionX = Integer.parseInt(tokens[1]);
+        tilePositionY = Integer.parseInt(tokens[2]);
+        int x = Integer.parseInt(tokens[3]);
+        int y = Integer.parseInt(tokens[4]);
+        int playerID = Integer.parseInt(tokens[5]);
+
+        BlockManager.getInstance().setBlockAsDrawing(this.tilePositionX, tilePositionY, x, y, playerID);
     }
 
     private void recieveMessages() {
@@ -111,6 +130,23 @@ public class ClientSocket {
         }
 
         playerID = id;
+    }
+
+    public void handleCursorCommand(String[] tokens) {
+        double x = Double.parseDouble(tokens[1]);
+        double y = Double.parseDouble(tokens[2]);
+        int playerID = Integer.parseInt(tokens[3]);
+        CursorManager cursorManager = CursorManager.getInstance();
+        Cursor cursor = cursorManager.getCursor(playerID);
+
+        if (cursor == null) {
+            System.out.println("Creating new cursor for player: " + playerID);
+            cursor = new Cursor(playerID);
+            cursorManager.addCursor(cursor);
+        }
+
+        cursor.show();
+        cursor.move(x, y);
     }
 
     public int getPlayerID() {
