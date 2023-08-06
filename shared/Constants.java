@@ -20,6 +20,7 @@ public class Constants {
     public static final int boardRows = 4;
     public static final int boardCols = 4;
 
+
     // Player colors
     public static final String[] playerColorsStrings = { "Blue", "Red", "Green", "Yellow" };
     public static final Color[] playerColors = { Color.BLUE, Color.RED, Color.GREEN, Color.YELLOW };

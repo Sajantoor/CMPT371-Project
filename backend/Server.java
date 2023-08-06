@@ -18,8 +18,6 @@ public class Server {
     public static void main(String[] args) {
         serverSocket = null;
         try {
-            // Initialize the game board and players (same as previous code)
-
             // Create the server socket
             serverSocket = new ServerSocket(PORT);
             System.out.println("Server listening on port " + PORT);
@@ -54,7 +52,6 @@ public class Server {
         if (!serverSocket.isClosed()) {
             serverSocket.close();
         }
-        // terminate connections
     }
 
     public synchronized static void addClientSocket(ClientHandler socket) {

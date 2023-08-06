@@ -196,7 +196,7 @@ class ClientHandler implements Runnable {
         String message = String.format("%s %d", Constants.startCommand, Server.getPlayerCount());
 
         // Send that the game is starting all players
-        broadcastMessageToAll(message);
+        broadcastMessage(message);
     }
 
     public void endGame() {

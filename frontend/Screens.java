@@ -15,6 +15,10 @@ public class Screens {
         return instance;
     }
 
+    public JFrame getFrame() {
+        return frame;
+    }
+
     public void start() {
         frame = new JFrame("Deny and Conquer");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -40,9 +44,7 @@ public class Screens {
 
         BlockManager.getInstance().addBlocksToPanel(boardPanel);
 
-        Cursor cursor = new Cursor(frame);
-
-        frame.add(cursor);
+        CursorManager.getInstance().createCursors();
         frame.add(boardPanel);
         frame.revalidate(); // Update the frame layout
         frame.repaint(); // Repaint the frame to reflect the changes

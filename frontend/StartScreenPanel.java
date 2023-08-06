@@ -37,6 +37,7 @@ public class StartScreenPanel extends JPanel {
                 startGame();
             }
         });
+
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         buttonPanel.setOpaque(false); // Set the panel background to be transparent
         buttonPanel.add(startButton);
@@ -48,6 +49,7 @@ public class StartScreenPanel extends JPanel {
     private void startGame() {
         String message = String.format("%s", Constants.startCommand);
         ClientSocket.getInstance().send(message);
+        Screens.getInstance().createAndShowGUI();
     }
 
     @Override
