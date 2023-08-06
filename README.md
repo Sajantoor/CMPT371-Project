@@ -96,7 +96,7 @@ Explanation:
 
 3. Handling Capturing: When the server sends a message with Constants.captureCommand, the `BlockManager` is updated by calling setBlockAsCaptured() to indicate that a player has captured a specific tile.
 
-In summary, the BlockManager class seems to be the shared object responsible for managing the state of tiles and drawing/capturing actions performed by players. It's accessed within the handleMessage() method, where the state of the tiles is updated based on the commands received from the server.
+
 
 
 # Group Members
