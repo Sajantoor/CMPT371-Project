@@ -10,7 +10,6 @@ class Block extends JPanel {
     private boolean captured = false;
     private ClientSocket socket = ClientSocket.getInstance();
     private Color crayonColor = Constants.playerColors[socket.getPlayerID()];
-    private static Color backgroundColor = Color.WHITE;
     private int totalBoxArea = 0;
     private int coloredArea = 0;
     private int lastXValue = -1;
@@ -28,6 +27,7 @@ class Block extends JPanel {
                     return;
                 }
                 isDrawing = true;
+                crayonColor = Constants.playerColors[socket.getPlayerID()];
                 totalBoxArea = getWidth() * getHeight();
                 draw(e);
             }
@@ -39,8 +39,9 @@ class Block extends JPanel {
                 }
                 isDrawing = false;
                 double threshold = 0.25 * totalBoxArea;
-
-                setBackground(coloredArea >= threshold ? crayonColor : backgroundColor);
+                if(coloredArea >= threshold){
+                    setBackground(crayonColor);
+                }
 
                 if (coloredArea < threshold) {
                     String message = String.format("%s %d %d", Constants.endDrawCommand, xCoord, yCoord);
@@ -104,14 +105,16 @@ class Block extends JPanel {
     }
 
     public void clearLines() {
-        // Reset the colored area and the stored drawn points
-        coloredArea = 0;
-        drawnPointsInBox.clear();
-        lastXValue = -1;
-        lastYValue = -1;
-
-        // Repaint the panel
-        repaint();
+        if (!captured) {
+            // Reset the colored area and the stored drawn points
+            coloredArea = 0;
+            drawnPointsInBox.clear();
+            captured = false;
+            lastXValue = -1;
+            lastYValue = -1;
+            // Repaint the panel
+            repaint();
+        }
     }
 
     @Override
@@ -143,18 +146,10 @@ class Block extends JPanel {
         if (captured) {
             return;
         }
-
-        // clear lines if less then threashold
-        if (coloredArea < 0.25 * totalBoxArea) {
-            clearLines();
-        }
+        isDrawing = true;
         crayonColor = Constants.playerColors[playerID];
         // Add the point to the list of drawn points and repaint the panel
         drawnPointsInBox.add(new Point(x, y));
         repaint();
-    }
-
-    public void clearPixels() {
-        clearLines();
     }
 }
