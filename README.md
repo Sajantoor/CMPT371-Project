@@ -19,13 +19,24 @@ The game we've created is Deny and Conquer. Deny and Conquer is a strategic mult
 
 **include high level description of the design**
 
-The game follows a client-server architecture, where multiple players (clients) connect to a central server to play the game. The server manages the game state, enforces rules, and facilitates communication between the clients.
+The game uses sockets for client-server communication. Clients connect to the server using TCP sockets, allowing bidirectional communication between the clients and the central game server, where the server starts listening for incoming connections from clients. When a client wants to join the game, it establishes a TCP connection to the server by connecting to the server's IP address and port number. Upon successful connection, clients register with the server by providing their player information, such as player name and pen color. The server assigns a unique ID to each player to distinguish them.
 
-The game starts when a player (the host) initiates the server and waits for other players to join. The server listens for incoming connections from clients. The game board is represented as an 8x8 grid, where each cell corresponds to a box. The server maintains the state of the board, including which boxes are claimed by which players.
+The game starts when a player (the host) initiates the server and waits for other players to join. The server listens for incoming connections from clients. The server maintains the game state, including the status of the 8x8 grid (game board) and which boxes are claimed by which players. The server updates and manages the game state based on the players' moves. The server checks if a box can be claimed based on the player's move. If the player colors at least 50% of the box, the server updates the game state to indicate that the box is claimed by that player.
 
-When a player makes a move, the server verifies if the box they selected can be claimed. If the player colors at least 50% of the box, the server updates the game state to reflect the claim, and the box turns into the color of the player. If the player colors less than 50%, the box remains unclaimed, and another player can attempt to claim it on their turn. After each move, the server sends updates to all connected clients, informing them of the current state of the game board and whose turn it is.
+The server facilitates the turn-based gameplay. It informs the clients whose turn it is to make a move. Clients take turns making moves on the game board. If the player colors at least 50% of the box, the server updates the game state to reflect the claim, and the box turns into the color of the player. The server checks if a box can be claimed based on the player's move. If the player colors at least 50% of the box, the server updates the game state to indicate that the box is claimed by that player. After each move, the server sends updates to all connected clients, informing them of the current state of the game board and whose turn it is.
+
+The server keeps track of the number of claimed boxes by each player. When all boxes are claimed, the server determines the winner(s) based on the number of boxes claimed.
 
 <!--Description of the Front End Design -->
+
+Command tokens are used in order to establish the actions being taken place within the connected game board:
+    -The startCommand: Display UI and start game.
+    -The playerIDCommand: Set the playerID
+    -The drawError: Handle the case where the player tries to draw on a tile that is already being drawn on by another player 
+    -The captureError: Handle the case where the player tries to capture a tile that is already captured by another player 
+    -The cursorCommand: Call the appropriate cursor's move method here based on <x position>, <y position>, and <player id>
+    -The startDrawCommand: Handle drawing in a box that is legal to draw in. Sets that block as being drawn in by player with playerID with exact xy position.
+
 
 ## Description of Messaging Scheme
 
