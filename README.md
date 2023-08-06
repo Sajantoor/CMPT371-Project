@@ -90,11 +90,9 @@ private void handleDrawing(String[] tokens) {
     }
 
 Explanation:
-1. Handling Drawing: When the server sends a message with Constants.startDrawCommand, the handleDrawing(tokens) method is called. This method processes the message and updates the state of the shared object by invoking setBlockAsDrawing().
-
+1.Handling Drawing: When the server sends a message with Constants.startDrawCommand, the handleDrawing(tokens) method is called. This method processes the message and updates the state of the shared object by invoking setBlockAsDrawing().
 2.Handling Ending Drawing: When the server sends a message with Constants.endDrawCommand, the BlockManager is updated by calling clearBlock() to clear the drawing on a specific tile.
-
-3. Handling Capturing: When the server sends a message with Constants.captureCommand, the `BlockManager` is updated by calling setBlockAsCaptured() to indicate that a player has captured a specific tile.
+3.Handling Capturing: When the server sends a message with Constants.captureCommand, the BlockManager is updated by calling setBlockAsCaptured() to indicate that a player has captured a specific tile.
 
 
 
