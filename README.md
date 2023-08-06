@@ -34,7 +34,7 @@ When a player makes a move, the server verifies if the box they selected can be 
 
 Opening Sockets:
 
-The opening of sockets happens in the `connect()` method. Here's the code snippet:
+The opening of sockets happens in the connect() method. Here's the code snippet:
 
 
 public void connect() throws IOException {
@@ -46,11 +46,11 @@ public void connect() throws IOException {
 
 
 Explanation:
-1. socket = new Socket(Constants.serverIP, Constants.serverPort);`: This line creates a new socket by specifying the server's IP address (`Constants.serverIP`) and the server's port number (`Constants.serverPort`).
+1. socket = new Socket(Constants.serverIP, Constants.serverPort);: This line creates a new socket by specifying the server's IP address (Constants.serverIP) and the server's port number (Constants.serverPort).
 
-2. out = new PrintWriter(socket.getOutputStream(), true);: This line creates a PrintWriter object (`out`) to write data to the server using the socket's output stream.
+2. out = new PrintWriter(socket.getOutputStream(), true);: This line creates a PrintWriter object (out) to write data to the server using the socket's output stream.
 
-3. in = new BufferedReader(new InputStreamReader(socket.getInputStream()));: This line creates a BufferedReader object (`in`) to read data from the server using the socket's input stream.
+3. in = new BufferedReader(new InputStreamReader(socket.getInputStream()));: This line creates a BufferedReader object (in) to read data from the server using the socket's input stream.
 
 4. this.recieveMessages();: This line starts the background thread to receive messages from the server continuously.
 
@@ -75,9 +75,10 @@ case (Constants.captureCommand):
     int playerID = Integer.parseInt(tokens[3]);
     int tileX = Integer.parseInt(tokens[1]);
     int tileY = Integer.parseInt(tokens[2]);
-
     BlockManager.getInstance().setBlockAsCaptured(tileX, tileY, playerID);
     break;
+
+   
 
 private void handleDrawing(String[] tokens) {
         tilePositionX = Integer.parseInt(tokens[1]);
@@ -85,11 +86,11 @@ private void handleDrawing(String[] tokens) {
         int x = Integer.parseInt(tokens[3]);
         int y = Integer.parseInt(tokens[4]);
         int playerID = Integer.parseInt(tokens[5]);
-
         BlockManager.getInstance().setBlockAsDrawing(this.tilePositionX, tilePositionY, x, y, playerID);
     }
 
 Explanation:
+
 1.Handling Drawing: When the server sends a message with Constants.startDrawCommand, the handleDrawing(tokens) method is called. This method processes the message and updates the state of the shared object by invoking setBlockAsDrawing().
 
 2.Handling Ending Drawing: When the server sends a message with Constants.endDrawCommand, the BlockManager is updated by calling clearBlock() to clear the drawing on a specific tile.
