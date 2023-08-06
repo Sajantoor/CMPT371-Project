@@ -58,8 +58,13 @@ public class ClientSocket {
                 BlockManager.getInstance().clearBlock(tilePositionX, tilePositionY);
                 break;
             case (Constants.endCommand):
-                // TOOD: Call the appropriate game over method here
-                // Game over
+                // Get each players score from the server
+                String[] playerScores = new String[tokens.length - 1];
+                for (int i = 0; i < playerScores.length; i++) {
+                    playerScores[i] = tokens[i + 1];
+                }
+
+                Screens.getInstance().endGameScreen(playerScores);
                 break;
             case (Constants.captureCommand):
                 // TODO: Change the tile's color to a player's color
@@ -78,6 +83,9 @@ public class ClientSocket {
             case (Constants.captureError):
                 // TODO: handle the case where the player tries to capture a tile that is
                 // already captured by another player (This case really shouldn't happen)
+                break;
+            case (Constants.startCommand):
+                Screens.getInstance().createAndShowGUI();
                 break;
             case (Constants.playerIDCommand):
                 setPlayerID(tokens[1]);

@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 class Block extends JPanel {
-    private int xCoord; // x coordinate of the block
-    private int yCoord; // y coordinate of the block
     private boolean isDrawing = false;
     private boolean captured = false;
     private ClientSocket socket = ClientSocket.getInstance();
@@ -20,8 +18,6 @@ class Block extends JPanel {
     private List<Point> drawnPointsInBox = new ArrayList<>();
 
     Block(int xCoord, int yCoord) {
-        this.xCoord = xCoord;
-        this.yCoord = yCoord;
         setPreferredSize(new Dimension(80, 80));
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
