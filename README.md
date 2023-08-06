@@ -104,7 +104,7 @@ ClientHandler.java
 Opening Sockets:
 The opening of sockets happens when a client connects to the server. The constructor of the `ClientHandler` class is responsible for this. Here's the code snippet:
 
-```java
+```
 public class ClientHandler implements Runnable {
     private Socket clientSocket;
     private PrintWriter out;
