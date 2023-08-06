@@ -134,8 +134,8 @@ Explanation:
 
 4. Server.players[playerID] = 1;: The Server.players array keeps track of which player is capturing a specific tile. When a client connects, the server marks the corresponding player index as "1" in the players array, indicating that the player is active and has connected to the game.
 
-**Handling the Shared Object:**
-The shared object in this context likely refers to the canvas or the game board, which is updated when clients draw or capture tiles. Here are the relevant code snippets for handling the shared object:
+Handling the Shared Object:
+
 
 ```
 @Override
