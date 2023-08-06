@@ -8,6 +8,8 @@ public class ClientSocket {
     private BufferedReader in;
     private boolean isClosed = false;
     private String playerID = null;
+    private int tilePositionX = 0;
+    private int tilePositionY = 0;
 
     private ClientSocket() {
     }
@@ -47,12 +49,13 @@ public class ClientSocket {
                 // Tokens are <x position> <y position> <player id>
                 break;
             case (Constants.startDrawCommand):
-                // TODO: Call the appropriate draw method here for this user
-                // Tokens are <tile x> <tile y> <player id>
+                handleDrawing(tokens);
                 break;
             case (Constants.endDrawCommand):
-                // TODO: Call the appropriate draw method here for this user
-                // Tokens are <tile x> <tile y> <player id>
+                tilePositionX = Integer.parseInt(tokens[1]);
+                tilePositionY = Integer.parseInt(tokens[2]);
+
+                BlockManager.getInstance().clearBlock(tilePositionX, tilePositionY);
                 break;
             case (Constants.endCommand):
                 // Get each players score from the server
@@ -91,6 +94,16 @@ public class ClientSocket {
                 System.out.println("Unrecognized command from frontend: " + commandToken);
                 break;
         }
+    }
+
+    private void handleDrawing(String[] tokens) {
+        tilePositionX = Integer.parseInt(tokens[1]);
+        tilePositionY = Integer.parseInt(tokens[2]);
+        int x = Integer.parseInt(tokens[3]);
+        int y = Integer.parseInt(tokens[4]);
+        int playerID = Integer.parseInt(tokens[5]);
+
+        BlockManager.getInstance().setBlockAsDrawing(this.tilePositionX, tilePositionY, x, y, playerID);
     }
 
     private void recieveMessages() {

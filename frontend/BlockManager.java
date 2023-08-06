@@ -28,4 +28,13 @@ public class BlockManager {
     public void setBlockAsCaptured(int x, int y, int playerID) {
         blocks[x][y].setCaptured(playerID);
     }
+  
+    public void setBlockAsDrawing(int x, int y, int x_relative, int y_relative, int playerID) {
+        blocks[x][y].drawPixel(x_relative, y_relative, playerID);
+    }
+
+    public void clearBlock(int x, int y) {
+        blocks[x][y].clearLines();
+    }
+
 }
