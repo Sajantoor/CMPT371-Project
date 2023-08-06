@@ -47,7 +47,7 @@ class Block extends JPanel {
                 setBackground(coloredArea >= threshold ? crayonColor : backgroundColor);
 
                 if (coloredArea < threshold) {
-                    String message = String.format("%s %d %d", Constants.clearPixels, xCoord, yCoord);
+                    String message = String.format("%s %d %d", Constants.endDrawCommand, xCoord, yCoord);
                     socket.send(message);
                     clearLines();
                 } else {
@@ -66,7 +66,7 @@ class Block extends JPanel {
                 }
                 if (isDrawing) {
                     draw(e);
-                    String message = String.format("%s %d %d %d %d", Constants.startDrawCommand, xCoord, yCoord, e.getX(), e.getY());
+                    String message = String.format("%s %d %d %d %d %d", Constants.startDrawCommand, xCoord, yCoord, e.getX(), e.getY(), socket.getPlayerID());
                     socket.send(message);
                 }
             }

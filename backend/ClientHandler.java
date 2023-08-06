@@ -68,15 +68,12 @@ class ClientHandler implements Runnable {
                 handleCapture(tokens);
                 break;
             case (Constants.startDrawCommand):
-                broadcastMessage(message);
+                handleStartDraw(tokens);
                 break;
             case (Constants.endDrawCommand):
                 handleEndDraw(tokens);
                 break;
             case (Constants.cursorCommand):
-                broadcastMessage(message);
-                break;
-            case(Constants.clearPixels):
                 broadcastMessage(message);
                 break;
             default:
@@ -107,7 +104,7 @@ class ClientHandler implements Runnable {
      */
     private void handleStartDraw(String[] tokens) {
         // Tokens are <tile x> <tile y> <player id>
-        int playerID = Integer.parseInt(tokens[3]);
+        int playerID = Integer.parseInt(tokens[6]);
         int tileX = Integer.parseInt(tokens[1]);
         int tileY = Integer.parseInt(tokens[2]);
 

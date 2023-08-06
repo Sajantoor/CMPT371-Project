@@ -8,6 +8,8 @@ public class ClientSocket {
     private BufferedReader in;
     private boolean isClosed = false;
     private String playerID = null;
+    private int tilePositionX = 0;
+    private int tilePositionY = 0;
 
     private ClientSocket() {
     }
@@ -46,9 +48,14 @@ public class ClientSocket {
                 // TODO: Call the appropriate cursor's move method here
                 // Tokens are <x position> <y position> <player id>
                 break;
+            case (Constants.startDrawCommand):
+                handleDrawing(tokens);
+                break;
             case (Constants.endDrawCommand):
-                // TODO: Call the appropriate draw method here for this user
-                // Tokens are <tile x> <tile y> <player id>
+                tilePositionX = Integer.parseInt(tokens[1]);
+                tilePositionY = Integer.parseInt(tokens[2]);
+
+                BlockManager.getInstance().clearBlock(tilePositionX, tilePositionY);
                 break;
             case (Constants.endCommand):
                 // TOOD: Call the appropriate game over method here
@@ -68,25 +75,6 @@ public class ClientSocket {
                 // TODO: handle the case where the player tries to draw on a tile that is
                 // already being drawn on by another player (This is a likely case)
                 break;
-            case (Constants.startDrawCommand):
-                System.out.println("Drawing pixels");
-                System.out.println(message);
-                int tilePositionX = Integer.parseInt(tokens[1]);
-                int tilePositionY = Integer.parseInt(tokens[2]);
-                int x = Integer.parseInt(tokens[3]);
-                int y = Integer.parseInt(tokens[4]);
-                playerID = Integer.parseInt(tokens[5]);
-
-                BlockManager.getInstance().setBlockAsDrawing(tilePositionX, tilePositionY, x, y, playerID);
-                break;
-            case (Constants.clearPixels):
-                System.out.println("Clearing pixels");
-                System.out.println(message);
-                tilePositionX = Integer.parseInt(tokens[1]);
-                tilePositionY = Integer.parseInt(tokens[2]);
-
-                BlockManager.getInstance().clearBlock(tilePositionX, tilePositionY);
-                break;
             case (Constants.captureError):
                 // TODO: handle the case where the player tries to capture a tile that is
                 // already captured by another player (This case really shouldn't happen)
@@ -98,6 +86,16 @@ public class ClientSocket {
                 System.out.println("Unrecognized command from frontend: " + commandToken);
                 break;
         }
+    }
+
+    private void handleDrawing(String[] tokens) {
+        tilePositionX = Integer.parseInt(tokens[1]);
+        tilePositionY = Integer.parseInt(tokens[2]);
+        int x = Integer.parseInt(tokens[3]);
+        int y = Integer.parseInt(tokens[4]);
+        int playerID = Integer.parseInt(tokens[5]);
+
+        BlockManager.getInstance().setBlockAsDrawing(this.tilePositionX, tilePositionY, x, y, playerID);
     }
 
     private void recieveMessages() {
