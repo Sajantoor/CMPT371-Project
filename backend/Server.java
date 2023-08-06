@@ -16,6 +16,9 @@ public class Server {
     private static int playerCount = 0;
     private static boolean gameStarted = false;
     private static List<ClientHandler> clientSockets = new ArrayList<>();
+    // Used to find the next avaliable player slot
+    // 0 if avaliable, 1 if taken
+    private static int[] players = { 0, 0, 0, 0 };
 
     public static void main(String[] args) throws IOException {
         serverSocket = null;
@@ -27,7 +30,8 @@ public class Server {
             // Accept connections from clients and handle them
             startFaultTolerance();
 
-            while (playerCount < MAX_PLAYERS && !gameStarted) {
+            while (!gameStarted) {
+                System.out.println(playerCount + " players connected");
                 Socket newSocket = serverSocket.accept();
                 ClientHandler clientHandler = new ClientHandler(newSocket);
                 Server.addClientSocket(clientHandler);
@@ -36,19 +40,18 @@ public class Server {
                 new Thread(clientHandler).start();
             }
         } catch (IOException e) {
-            if (playerCount > MAX_PLAYERS) {
-                throw new RuntimeException("The number of target connections cannot exceed  " + MAX_PLAYERS);
-            }
-        } finally {
             // Close the server socket
             if (serverSocket != null) {
                 try {
-                    clear();
-                } catch (IOException e) {
-                    throw new RuntimeException("Error closing sockets", e);
+                    serverSocket.close();
+                } catch (IOException error) {
+                    throw new RuntimeException("Error closing sockets", error);
                 }
             }
         }
+
+        // TODO: Clear the connections after server is closed
+
     }
 
     public static void clear() throws IOException {
@@ -59,6 +62,7 @@ public class Server {
         for (ClientHandler clientHandler : clientSockets) {
             removeClientSocket(clientHandler);
         }
+
         clientSockets.clear();
         System.out.println("Server cleared. All existing connections terminated.");
     }
@@ -106,8 +110,23 @@ public class Server {
     }
 
     public synchronized static void removeClientSocket(ClientHandler socket) {
-        clientSockets.remove(socket);
+        try {
+            socket.getSocket().close();
+        } catch (IOException e) {
+            throw new RuntimeException("Error closing socket", e);
+        }
+
+        int playerID = socket.getPLayerID();
+        // Mark player ID as avaliable
+        if (playerID != -1) {
+            players[playerID] = 0;
+            System.out.println("Player " + playerID + " has left the game.");
+
+        }
+
         playerCount--;
+        clientSockets.remove(socket);
+        System.out.println("Player count: " + playerCount);
     }
 
     public static List<ClientHandler> getClientSockets() {
@@ -124,5 +143,18 @@ public class Server {
 
     public static void stopAcceptingClients() {
         gameStarted = true;
+    }
+
+    public synchronized static int getAvaliablePlayer() {
+        for (int i = 0; i < players.length; i++) {
+            if (players[i] == 0) {
+                players[i] = 1;
+                System.out.println("Found avaliable player slot: " + i + ".");
+                return i;
+            }
+        }
+
+        System.out.println("No avaliable player slots found.");
+        return -1;
     }
 }

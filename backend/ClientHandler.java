@@ -12,13 +12,23 @@ class ClientHandler implements Runnable {
     private BufferedReader in;
     // status variable of each thread
     private boolean isClientConnected;
+    private int playerID;
 
     public ClientHandler(Socket clientSocket) {
         this.clientSocket = clientSocket;
         this.isClientConnected = true;
+        setPlayerID();
     }
 
-    private Socket getSocket() {
+    private void setPlayerID() {
+        playerID = Server.getAvaliablePlayer();
+    }
+
+    public int getPLayerID() {
+        return playerID;
+    }
+
+    public Socket getSocket() {
         return clientSocket;
     }
 
@@ -36,7 +46,7 @@ class ClientHandler implements Runnable {
             in = new BufferedReader(new InputStreamReader(is));
 
             // Send playerID to the client when connecting
-            String sendPlayerID = "playerID " + (Server.getPlayerCount() - 1);
+            String sendPlayerID = "playerID " + playerID;
             sendMessage(sendPlayerID);
 
             String message;
@@ -49,7 +59,6 @@ class ClientHandler implements Runnable {
             // Remove the client socket from the list of active client sockets upon
             // disconnection
             Server.removeClientSocket(this);
-            clientSocket.close();
         } catch (IOException e) {
             System.err.println("Error handling client: " + e.getMessage());
             isClientConnected = false;
