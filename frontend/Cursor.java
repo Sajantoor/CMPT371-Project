@@ -18,7 +18,7 @@ class Cursor extends JComponent {
     public Cursor() {
         this.frame = Screens.getInstance().getFrame();
 
-        cursorImage = loadCursorImage();
+        cursorImage = loadCursorImage(ClientSocket.getInstance().getPlayerID());
 
         java.awt.Cursor customCursor = Toolkit.getDefaultToolkit().createCustomCursor(
                 cursorImage,
@@ -52,7 +52,7 @@ class Cursor extends JComponent {
         this.playerID = playerID;
 
         // Load the cursor image
-        cursorImage = loadCursorImage();
+        cursorImage = loadCursorImage(playerID);
         cursorLabel = new JLabel(new ImageIcon(cursorImage));
 
         // add the cursor image to the frame and set the cursor to the center of the
@@ -95,9 +95,9 @@ class Cursor extends JComponent {
     }
 
     // Get cursor image
-    private static BufferedImage loadCursorImage() {
+    private static BufferedImage loadCursorImage(int playerID) {
         try {
-            String crayonColorName = Constants.ColorNames[ClientSocket.getInstance().getPlayerID()];
+            String crayonColorName = Constants.ColorNames[playerID];
             String crayonImageName = String.format("crayon_%s.png", crayonColorName);
             URL imageURL = App.class.getResource("assets/" + crayonImageName);
 
