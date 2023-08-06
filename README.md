@@ -33,6 +33,7 @@ When a player makes a move, the server verifies if the box they selected can be 
 **handling of shared object**
 
 ClientSocket.java
+
 Opening Sockets:
 
 The opening of sockets happens in the connect() method. Here's the code snippet:
