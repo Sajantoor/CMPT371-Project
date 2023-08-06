@@ -126,7 +126,7 @@ public class ClientHandler implements Runnable {
 ```
 
 Explanation:
-1. `Socket clientSocket: The constructor receives the client's socket as a parameter and assigns it to the clientSocket member variable.
+1. Socket clientSocket: The constructor receives the client's socket as a parameter and assigns it to the clientSocket member variable.
 
 2. isClientConnected: A boolean variable to keep track of whether the client is connected or not. It is initially set to true.
 
