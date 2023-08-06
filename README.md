@@ -36,7 +36,7 @@ Opening Sockets:
 
 The opening of sockets happens in the connect() method. Here's the code snippet:
 
-
+```
 public void connect() throws IOException {
     socket = new Socket(Constants.serverIP, Constants.serverPort);
     out = new PrintWriter(socket.getOutputStream(), true);
@@ -44,7 +44,7 @@ public void connect() throws IOException {
     this.recieveMessages();
 }
 
-
+```
 Explanation:
 1. socket = new Socket(Constants.serverIP, Constants.serverPort);: This line creates a new socket by specifying the server's IP address (Constants.serverIP) and the server's port number (Constants.serverPort).
 
@@ -58,16 +58,17 @@ Explanation:
 
 
 Handling the Shared Object:
-
+```
 case (Constants.startDrawCommand):
     handleDrawing(tokens);
     break;
 case (Constants.endDrawCommand):
     tilePositionX = Integer.parseInt(tokens[1]);
     tilePositionY = Integer.parseInt(tokens[2]);
-
+    
     BlockManager.getInstance().clearBlock(tilePositionX, tilePositionY);
     break;
+    
 case (Constants.captureCommand):
     // TODO: Change the tile's color to a player's color
     // A player captures a tile
@@ -88,7 +89,7 @@ private void handleDrawing(String[] tokens) {
         int playerID = Integer.parseInt(tokens[5]);
         BlockManager.getInstance().setBlockAsDrawing(this.tilePositionX, tilePositionY, x, y, playerID);
     }
-
+```
 Explanation:
 
 1.Handling Drawing: When the server sends a message with Constants.startDrawCommand, the handleDrawing(tokens) method is called. This method processes the message and updates the state of the shared object by invoking setBlockAsDrawing().
