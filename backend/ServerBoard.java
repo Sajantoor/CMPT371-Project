@@ -6,6 +6,13 @@ class ServerBoard {
 
     ServerBoard() {
         board = new int[Constants.boardRows][Constants.boardCols];
+        // set all tiles to -1 to indicate that they are free
+        for (int i = 0; i < Constants.boardRows; i++) {
+            for (int j = 0; j < Constants.boardCols; j++) {
+                board[i][j] = -1;
+            }
+        }
+
         captureCount = 0;
         playerScores = new int[Server.getPlayerCount()];
     }
@@ -28,7 +35,7 @@ class ServerBoard {
     }
 
     private boolean isTileFree(int row, int col) {
-        return board[row][col] == 0;
+        return board[row][col] == -1;
     }
 
     private boolean isTileBeingDrawnBy(int row, int col, int playerID) {
@@ -38,7 +45,7 @@ class ServerBoard {
     public synchronized boolean releaseTile(int row, int col, int playerID) {
         // Only release the tile if it is being drawn by the player
         if (isTileBeingDrawnBy(row, col, playerID)) {
-            board[row][col] = 0;
+            board[row][col] = -1;
             return true;
         }
 
