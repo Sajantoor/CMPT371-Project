@@ -35,7 +35,7 @@ public class Screens {
     public void createAndShowGUI() {
         frame.getContentPane().removeAll();
 
-        JPanel boardPanel = new JPanel(new GridLayout(4, 4, 5, 5)) {
+        JPanel boardPanel = new JPanel(new GridLayout(Constants.boardCols, Constants.boardRows, 5, 5)) {
             @Override
             public Insets getInsets() {
                 return new Insets(0, 0, 0, 0);

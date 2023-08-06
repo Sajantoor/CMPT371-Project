@@ -17,9 +17,8 @@ public class Constants {
     public static final int serverPort = 3000;
 
     // Board
-    public static final int boardRows = 4;
-    public static final int boardCols = 4;
-
+    public static final int boardRows = 8;
+    public static final int boardCols = 8;
 
     // Player colors
     public static final String[] playerColorsStrings = { "Blue", "Red", "Green", "Yellow" };
