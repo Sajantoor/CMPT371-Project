@@ -19,6 +19,7 @@ public class StartScreenPanel extends JPanel {
                 startGame();
             }
         });
+
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(startButton);
         add(buttonPanel, BorderLayout.SOUTH);
@@ -27,5 +28,6 @@ public class StartScreenPanel extends JPanel {
     private void startGame() {
         String message = String.format("%s", Constants.startCommand);
         ClientSocket.getInstance().send(message);
+        Screens.getInstance().createAndShowGUI();
     }
 }

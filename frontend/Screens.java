@@ -43,8 +43,8 @@ public class Screens {
         };
 
         BlockManager.getInstance().addBlocksToPanel(boardPanel);
-        CursorManager.getInstance().createCursors();
 
+        CursorManager.getInstance().createCursors();
         frame.add(boardPanel);
         frame.revalidate(); // Update the frame layout
         frame.repaint(); // Repaint the frame to reflect the changes
