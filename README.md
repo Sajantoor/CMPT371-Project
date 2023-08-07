@@ -20,7 +20,7 @@ When all boxes are claimed, the server determines the winner(s) based on the num
 
 JavaFX is used for the front-end UI that is then used to interact with the game. Where it displays the player's pen icon, the variety of colours used to colour in the initially empty 8x8 board. The clients send messages to the server to let it know that that specific playerID will be colouring in on a box at coordinates (X,Y). The clients receive messages indicating the turn player, whether a move is legal or not, etc. The GUI reflects these changes by changing the state of the board for each client player's board.
 
-Command tokens are used in order to establish the actions being taken place within the connected game board:
+Command tokens are used in order to establish the actions being taken place within the connected game board.
 
 ## How to Run the Game
 
