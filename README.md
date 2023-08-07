@@ -206,7 +206,7 @@ private void handleMessage(String message) {
         case (Constants.endDrawCommand):
             handleEndDraw(tokens);
             break;
-        // Add more cases for other message types if needed
+       
         // ...
     }
 }
@@ -217,11 +217,78 @@ Explanation:
 
 2. handleMessage(String message): This method is responsible for processing the messages received from the client. It splits the message into tokens and checks the command token (first token) to determine the action to be taken. Based on the command token, different methods like handleCapture(), handleStartDraw(), and handleEndDraw() are called to update the shared object (game board) accordingly.
 
+```
+case (Constants.captureCommand):
+    handleCapture(tokens);
+    break;
+
+```
+
+Explanation:
+
+1. When the server receives a message with `Constants.captureCommand`, the `handleCapture(tokens)` method is called. This method attempts to capture a tile on the shared game board.
+
+2. It checks if the tile is available for capture (ServerBoard.getInstance().attemptCaptureTile(tileX, tileY, playerID)).
+   
+3. If the tile can be captured, it marks the tile as captured and broadcasts the capture message to all other clients using broadcastMessage(String.join(" ", tokens)).
+   
+```
+case (Constants.startDrawCommand):
+    handleStartDraw(tokens);
+    break;
+```
+
+Explanation:
+
+1. When the server receives a message with Constants.startDrawCommand, the handleStartDraw(tokens) method is called. This method attempts to start drawing on a tile on the shared game board.
+
+2. It checks if the tile is available for drawing (ServerBoard.getInstance().attemptDrawTile(tileX, tileY, playerID)).
+
+3. If the tile can be drawn upon, it marks the tile as being drawn and broadcasts the drawing message to all other clients using broadcastMessage(String.join(" ", tokens)).
+ 
+```
+case (Constants.endDrawCommand):
+    handleEndDraw(tokens);
+    break;
+```
+
+Explanation:
+
+1. When the server receives a message with Constants.endDrawCommand, the handleEndDraw(tokens) method is called. This method marks the tile as no longer being drawn by the player.
+
+2. It calls ServerBoard.getInstance().releaseTile(tileX, tileY, playerID) to unmark the tile as being drawn and broadcasts the end draw message to all other clients using broadcastMessage(String.join(" ", tokens)).
+
+```
+private void broadcastMessage(String message) {
+    for (ClientHandler socket : Server.getClientSockets()) {
+        if (socket != this && socket.getSocket().isConnected()) {
+            socket.sendMessage(message);
+        }
+    }
+}
+
+private void broadcastMessageToAll(String message) {
+    for (ClientHandler socket : Server.getClientSockets()) {
+        if (socket != this && socket.getSocket().isConnected()) {
+            socket.sendMessage(message);
+        }
+        out.println(message);
+    }
+}
+```
+
+Explanation:
+
+1. These methods are responsible for broadcasting messages to all other clients connected to the server.
+
+2. broadcastMessage(String message) sends the provided message to all other connected clients except the current client (represented by this ClientHandler instance).
+
+3. broadcastMessageToAll(String message) additionally sends the message to the current client itself using out.println(message), in addition to broadcasting to other clients.
+
+4. Both methods iterate through all the connected clients using Server.getClientSockets() and use sendMessage(message) to send the message to each client.
 
 
-
-
-
+    
 # Group Members
 
 Arjun Singh - 20%
