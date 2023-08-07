@@ -29,12 +29,14 @@ The server facilitates the turn-based gameplay. It informs the clients whose tur
 JavaFX is used for the front-end UI used to interact with the game. Where it displays the player's pen icon, the variety of colors used to color in the initally empty 8x8 board displayed. The clients send messages to the server to let it know that that specific playerID will be coloring in on a box at spot (X,Y). The clients receive messages indicating the turn player, whether or not a move is legal or not, etc. The GUI reflects these changes by changing the state of the board for each client player's board.
 
 Command tokens are used in order to establish the actions being taken place within the connected game board:
-    -The startCommand: Display UI and start game.
-    -The playerIDCommand: Set the playerID
-    -The drawError: Handle the case where the player tries to draw on a tile that is already being drawn on by another player 
-    -The captureError: Handle the case where the player tries to capture a tile that is already captured by another player 
-    -The cursorCommand: Call the appropriate cursor's move method here based on <x position>, <y position>, and <player id>
-    -The startDrawCommand: Handle drawing in a box that is legal to draw in. Sets that block as being drawn in by player with playerID with exact xy position.
+* The startCommand: Display UI and start game.
+* The endCommand: End UI display and game.
+* The playerIDCommand: Set the playerID
+* The drawError: Handle the case where the player tries to draw on a tile that is already being drawn on by another player
+* The drawError: Handle the case where the player tries to draw on a tile that is already being drawn on by another player 
+* The captureError: Handle the case where the player tries to capture a tile that is already captured by another player 
+* The cursorCommand: Call the appropriate cursor's move method here based on <x position>, <y position>, and <player id>
+* The startDrawCommand: Handle drawing in a box that is legal to draw in. Sets that block as being drawn in by player with playerID with exact xy position.
 
 
 ## Description of Messaging Scheme
