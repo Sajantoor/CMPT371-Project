@@ -10,15 +10,14 @@ public class StartScreenPanel extends JPanel {
     public StartScreenPanel() {
         setLayout(new BorderLayout());
 
-    Border titledBorder = BorderFactory.createTitledBorder(
-                    BorderFactory.createLineBorder(Color.BLACK, 2), "Deny and Conquer",
-                    TitledBorder.CENTER, TitledBorder.TOP,
-                    new Font("Arial", Font.BOLD, 30),
-                    Color.BLACK);
-            setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createEmptyBorder(20, 20, 20, 20),
-                    titledBorder
-            ));
+        Border titledBorder = BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(Color.BLACK, 2), "Deny and Conquer",
+                TitledBorder.CENTER, TitledBorder.TOP,
+                new Font("Arial", Font.BOLD, 30),
+                Color.BLACK);
+        setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createEmptyBorder(20, 20, 20, 20),
+                titledBorder));
 
         JLabel infoLabel = new JLabel("Become the ultimate champion!");
         infoLabel.setFont(new Font("Arial", Font.ITALIC, 16));

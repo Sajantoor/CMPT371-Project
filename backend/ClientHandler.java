@@ -65,6 +65,11 @@ class ClientHandler implements Runnable {
         }
     }
 
+    /**
+     * Handle messages from the client
+     * 
+     * @param message The message from the client
+     */
     private void handleMessage(String message) {
         if (message == null) {
             return;
@@ -102,6 +107,12 @@ class ClientHandler implements Runnable {
         }
     }
 
+    /**
+     * Broadcast messages to all other clients, not including the client that sent
+     * the message
+     * 
+     * @param message Message to broadcast
+     */
     private void broadcastMessage(String message) {
         for (ClientHandler socket : Server.getClientSockets()) {
             if (socket != this && socket.getSocket().isConnected()) {
@@ -110,6 +121,11 @@ class ClientHandler implements Runnable {
         }
     }
 
+    /**
+     * Broadcast message to all clients, including the client that sent the message
+     * 
+     * @param message Message to broadcast
+     */
     private void broadcastMessageToAll(String message) {
         for (ClientHandler socket : Server.getClientSockets()) {
             if (socket != this && socket.getSocket().isConnected()) {
@@ -142,9 +158,6 @@ class ClientHandler implements Runnable {
         // don't broadcast the message
         if (ServerBoard.getInstance().attemptDrawTile(tileX, tileY, playerID)) {
             broadcastMessage(String.join(" ", tokens));
-        } else {
-            System.out.println("Tile is being drawn by another player");
-            sendMessage(Constants.drawError);
         }
     }
 
@@ -175,11 +188,6 @@ class ClientHandler implements Runnable {
             if (ServerBoard.getInstance().allTilesCaptured()) {
                 endGame();
             }
-            return;
-        } else {
-            // the tile is being captured or captured by another player, so don't capture
-            // and don't broadcast the message
-            sendMessage(Constants.captureError);
         }
     }
 
@@ -216,6 +224,9 @@ class ClientHandler implements Runnable {
         broadcastMessage(message);
     }
 
+    /**
+     * Ends the game and sends the scores to all clients
+     */
     public void endGame() {
         int[] playerScores = ServerBoard.getInstance().getPlayerScores();
 

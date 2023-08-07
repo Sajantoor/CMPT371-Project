@@ -8,8 +8,6 @@ public class Constants {
     public static final String endCommand = "end";
     public static final String captureCommand = "capture";
     public static final String playerIDCommand = "playerID";
-    public static final String drawError = "drawError";
-    public static final String captureError = "captureError";
     public static final String startCommand = "start";
 
     // Server

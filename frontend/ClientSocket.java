@@ -53,24 +53,10 @@ public class ClientSocket {
                 handleEndDraw(tokens);
                 break;
             case (Constants.endCommand):
-                // Get each players score from the server
-                String[] playerScores = new String[tokens.length - 1];
-                for (int i = 0; i < playerScores.length; i++) {
-                    playerScores[i] = tokens[i + 1];
-                }
-
-                Screens.getInstance().endGameScreen(playerScores);
+                handleGameEnd(tokens);
                 break;
             case (Constants.captureCommand):
                 handleCapture(tokens);
-                break;
-            case (Constants.drawError):
-                // TODO: handle the case where the player tries to draw on a tile that is
-                // already being drawn on by another player (This is a likely case)
-                break;
-            case (Constants.captureError):
-                // TODO: handle the case where the player tries to capture a tile that is
-                // already captured by another player (This case really shouldn't happen)
                 break;
             case (Constants.startCommand):
                 Screens.getInstance().createAndShowGUI();
@@ -82,6 +68,15 @@ public class ClientSocket {
                 System.out.println("Unrecognized command from frontend: " + commandToken);
                 break;
         }
+    }
+
+    private void handleGameEnd(String[] tokens) {
+        String[] playerScores = new String[tokens.length - 1];
+        for (int i = 0; i < playerScores.length; i++) {
+            playerScores[i] = tokens[i + 1];
+        }
+
+        Screens.getInstance().endGameScreen(playerScores);
     }
 
     private void handleDrawing(String[] tokens) {
@@ -150,7 +145,7 @@ public class ClientSocket {
         playerID = id;
     }
 
-    public void handleCursorCommand(String[] tokens) {
+    private void handleCursorCommand(String[] tokens) {
         double x = Double.parseDouble(tokens[1]);
         double y = Double.parseDouble(tokens[2]);
         int playerID = Integer.parseInt(tokens[3]);
