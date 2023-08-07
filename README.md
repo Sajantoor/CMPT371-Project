@@ -18,16 +18,15 @@ The game we've created is Deny and Conquer. Deny and Conquer is a strategic mult
 ## Description of Design
 
 **include high level description of the design**
+We use Java to implement our design of the game.
 
 The game uses sockets for client-server communication. Clients connect to the server using TCP sockets, allowing bidirectional communication between the clients and the central game server, where the server starts listening for incoming connections from clients. When a client wants to join the game, it establishes a TCP connection to the server by connecting to the server's IP address and port number. Upon successful connection, clients register with the server by providing their player information, such as player name and pen color. The server assigns a unique ID to each player to distinguish them.
 
 The game starts when a player (the host) initiates the server and waits for other players to join. The server listens for incoming connections from clients. The server maintains the game state, including the status of the 8x8 grid (game board) and which boxes are claimed by which players. The server updates and manages the game state based on the players' moves. The server checks if a box can be claimed based on the player's move. If the player colors at least 50% of the box, the server updates the game state to indicate that the box is claimed by that player.
 
-The server facilitates the turn-based gameplay. It informs the clients whose turn it is to make a move. Clients take turns making moves on the game board. If the player colors at least 50% of the box, the server updates the game state to reflect the claim, and the box turns into the color of the player. The server checks if a box can be claimed based on the player's move. If the player colors at least 50% of the box, the server updates the game state to indicate that the box is claimed by that player. After each move, the server sends updates to all connected clients, informing them of the current state of the game board and whose turn it is.
+The server facilitates the turn-based gameplay. It informs the clients whose turn it is to make a move. Clients take turns making moves on the game board. If the player colors at least 50% of the box, the server updates the game state to reflect the claim, and the box turns into the color of the player. The server checks if a box can be claimed based on the player's move. If the player colors at least 50% of the box, the server updates the game state to indicate that the box is claimed by that player. After each move, the server sends updates to all connected clients, informing them of the current state of the game board and whose turn it is. The server keeps track of the number of claimed boxes by each player. When all boxes are claimed, the server determines the winner(s) based on the number of boxes claimed.
 
-The server keeps track of the number of claimed boxes by each player. When all boxes are claimed, the server determines the winner(s) based on the number of boxes claimed.
-
-<!--Description of the Front End Design -->
+JavaFX is used for the front-end UI used to interact with the game. Where it displays the player's pen icon, the variety of colors used to color in the initally empty 8x8 board displayed. The clients send messages to the server to let it know that that specific playerID will be coloring in on a box at spot (X,Y). The clients receive messages indicating the turn player, whether or not a move is legal or not, etc. The GUI reflects these changes by changing the state of the board for each client player's board.
 
 Command tokens are used in order to establish the actions being taken place within the connected game board:
     -The startCommand: Display UI and start game.
