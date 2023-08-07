@@ -74,10 +74,6 @@ class Cursor extends JComponent {
     }
 
     public void hide() {
-        if (!isShowing()) {
-            return;
-        }
-
         cursorLabel.setVisible(false);
     }
 
