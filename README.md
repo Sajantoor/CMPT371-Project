@@ -38,9 +38,6 @@ Command tokens are used in order to establish the actions being taken place with
 
 ## Description of Messaging Scheme
 
-**include opening sockets snippets**
-**handling of shared object**
-
 ClientSocket.java
 
 Opening Sockets:
@@ -371,4 +368,4 @@ Yousef Haiba - 20%
 
 # Video of Demo
 
-**Include video here**
+https://www.youtube.com/watch?v=QR9gGSQRvzY
