@@ -17,10 +17,7 @@ The game we've created is Deny and Conquer. Deny and Conquer is a strategic mult
 
 ## Description of Design
 
-**include high level description of the design**
-We use Java to implement our design of the game.
-
-The game uses sockets for client-server communication. Clients connect to the server using TCP sockets, allowing bidirectional communication between the clients and the central game server, where the server starts listening for incoming connections from clients. When a client wants to join the game, it establishes a TCP connection to the server by connecting to the server's IP address and port number. Upon successful connection, clients register with the server by providing their player information, such as player name and pen color. The server assigns a unique ID to each player to distinguish them.
+Deny & Conquer is designed using Java for Backend Design and using JavaFX for the Frontend Design. The game uses sockets for client-server communication. Clients connect to the server using TCP sockets, allowing bidirectional communication between the clients and the central game server, where the server starts listening for incoming connections from clients. When a client wants to join the game, it establishes a TCP connection to the server by connecting to the server's IP address and port number. Upon successful connection, clients register with the server by providing their player information, such as player name and pen color. The server assigns a unique ID to each player to distinguish them.
 
 The game starts when a player (the host) initiates the server and waits for other players to join. The server listens for incoming connections from clients. The server maintains the game state, including the status of the 8x8 grid (game board) and which boxes are claimed by which players. The server updates and manages the game state based on the players' moves. The server checks if a box can be claimed based on the player's move. If the player colors at least 50% of the box, the server updates the game state to indicate that the box is claimed by that player.
 
