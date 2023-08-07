@@ -75,10 +75,9 @@ class Cursor extends JComponent {
 
     public void hide() {
         if (!isShowing()) {
+            cursorLabel.setVisible(false);
             return;
         }
-
-        cursorLabel.setVisible(false);
     }
 
     private int calculateHotspotX() {
