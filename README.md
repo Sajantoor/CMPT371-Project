@@ -22,6 +22,34 @@ JavaFX is used for the front-end UI that is then used to interact with the game.
 
 Command tokens are used in order to establish the actions being taken place within the connected game board:
 
+## How to Run the Game
+
+### Server
+
+Compile the server using the following command:
+
+```bash
+javac backend/*.java shared/*.java
+
+cd backend
+
+java Server
+```
+
+### Client
+
+Compile the client using the following command:
+
+```bash
+javac frontend/*.java shared/*.java
+
+cd frontend
+
+java Client
+```
+
+This is to run locally, if you want to run on different machines, you will need to change the server IP address in the Constants.java file after hosting a TCP server.
+
 ## Description of Messaging Scheme
 
 -   The `startCommand`: Display UI and start game, this is sent after one of the clients hit the "play" button on the UI.
