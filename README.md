@@ -111,6 +111,75 @@ Explanation:
 
 3.Handling Capturing: When the server sends a message with Constants.captureCommand, the BlockManager is updated by calling setBlockAsCaptured() to indicate that a player has captured a specific tile.
 
+
+
+```
+private void handleEndDraw(String[] tokens) {
+    int tilePositionX = Integer.parseInt(tokens[1]);
+    int tilePositionY = Integer.parseInt(tokens[2]);
+    int playerID = Integer.parseInt(tokens[3]);
+
+    BlockManager.getInstance().clearBlock(tilePositionX, tilePositionY);
+    CursorManager.getInstance().getCursor(playerID).show();
+}
+```
+
+Explanation:
+
+1. When the server receives a message indicating the end of drawing (Constants.endDrawCommand), the handleEndDraw(tokens) method is called.
+
+2. It parses the tile position (tilePositionX and tilePositionY) and the player ID from the message tokens.
+
+3. The method uses BlockManager.getInstance().clearBlock(tilePositionX, tilePositionY) to clear the block at the specified tile position on the shared canvas.
+
+4. It then calls CursorManager.getInstance().getCursor(playerID).show() to show the cursor of the corresponding player.
+
+
+```
+private void handleCapture(String[] tokens) {
+    int userPlayerID = Integer.parseInt(tokens[3]);
+    int tileX = Integer.parseInt(tokens[1]);
+    int tileY = Integer.parseInt(tokens[2]);
+    int playerID = Integer.parseInt(tokens[3]);
+
+    BlockManager.getInstance().setBlockAsCaptured(tileX, tileY, userPlayerID);
+    CursorManager.getInstance().getCursor(playerID).show();
+}
+```
+
+Explanation:
+
+1. When the server receives a message indicating a tile capture (Constants.captureCommand), the handleCapture(tokens) method is called.
+
+2. It parses the user's player ID (userPlayerID), the tile position (tileX and tileY), and the player ID from the message tokens.
+
+3. The method uses BlockManager.getInstance().setBlockAsCaptured(tileX, tileY, userPlayerID) to mark the specified tile as captured by the corresponding player.
+
+4. It then calls CursorManager.getInstance().getCursor(playerID).show() to show the cursor of the capturing player.
+
+```
+private void recieveMessages() {
+    new Thread(() -> {
+        while (!isClosed) {
+            try {
+                String message = in.readLine();
+                handleMessage(message);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }).start();
+}
+```
+
+Explanation:
+
+1. The recieveMessages() method is responsible for continuously receiving messages from the server in a separate thread.
+
+2. Within the loop, it reads the incoming messages using in.readLine() and passes each message to the handleMessage(message) method for processing.
+
+
+
 ClientHandler.java
 
 Opening Sockets:
@@ -226,7 +295,7 @@ case (Constants.captureCommand):
 
 Explanation:
 
-1. When the server receives a message with `Constants.captureCommand`, the `handleCapture(tokens)` method is called. This method attempts to capture a tile on the shared game board.
+1. When the server receives a message with Constants.captureCommand, the handleCapture(tokens) method is called. This method attempts to capture a tile on the shared game board.
 
 2. It checks if the tile is available for capture (ServerBoard.getInstance().attemptCaptureTile(tileX, tileY, playerID)).
    
