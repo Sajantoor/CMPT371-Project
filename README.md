@@ -1,6 +1,6 @@
-# CMPT 371 Final Project
+# Deny and Conquer Game
 
-# Description of Game
+## Description of Game
 
 The game we've created is called Deny and Conquer. Deny and Conquer is a strategic multiplayer board game played on an 8x8 square grid. Each player has a pen of a different colour, and the objective is to take over as many boxes as possible and deny opponents from filling the most number of boxes.
 
@@ -399,15 +399,15 @@ Explanation:
 
 # Group Members
 
-Arjun Singh - 20%
+Arjun Singh
 
-Gurinder Bhogal - 20%
+Gurinder Bhogal
 
-Jessy Chahal - 20%
+Jessy Chahal
 
-Sajan Toor - 20%
+Sajan Toor
 
-Yousef Haiba - 20%
+Yousef Haiba 
 
 # Video of Demo
 
